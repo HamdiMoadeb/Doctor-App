@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
-import 'package:doctor_app/components/autocompltet_textField.dart';
 import 'package:doctor_app/components/searchable_dropdown.dart';
 
 class AddAppointment extends StatefulWidget {
@@ -13,6 +12,7 @@ class _State extends State<AddAppointment> {
   var data = ['Small', 'Medium', 'Large', 'XLarge'];
   int _value = 1;
   bool status = false;
+  DateTime selectedDate = DateTime.now();
 
   List<ChipData> chipsData = [
     //Matin
@@ -86,7 +86,7 @@ class _State extends State<AddAppointment> {
       selected: chipData.selected,
       checkmarkColor: Colors.black45,
       isEnabled: chipData.enabled,
-      disabledColor: Colors.grey.shade400,
+      disabledColor: Colors.red.shade100,
       selectedColor: Colors.blue,
       onSelected: (bool isSelected) {
         setState(() {
@@ -114,24 +114,28 @@ class _State extends State<AddAppointment> {
       body: Padding(
         padding: const EdgeInsets.all(13.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Expanded(
               flex: 1,
+              child: SearchableDrop(),
+            ),
+            Expanded(
+              flex: 1,
               child: DatePickerTimeline(
-                DateTime.now(),
+                selectedDate,
                 height: 80.0,
                 locale: 'fr',
                 onDateChange: (date) {
-                  // New date selected
+                  setState(() {
+                    selectedDate = date;
+                  });
                   print(date.toString());
                 },
               ),
             ),
-            SizedBox(
-              height: 20.0,
-            ),
             Expanded(
-              flex: 2,
+              flex: 4,
               child: ListView.builder(
                 itemCount: vehicles.length,
                 itemBuilder: (context, i) {
@@ -183,12 +187,24 @@ class _State extends State<AddAppointment> {
               ),
             ),
             Expanded(
-              flex: 2,
-              child: MyApp(),
-            ),
-            Expanded(
-              child: Container(),
-              flex: 2,
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Container(
+                  width: 200.0,
+                  child: RaisedButton(
+                    onPressed: () {},
+                    color: Colors.blue,
+                    child: Text(
+                      'Ajouter',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),

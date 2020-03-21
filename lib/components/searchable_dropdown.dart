@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
 
-class MyApp extends StatefulWidget {
+class SearchableDrop extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<SearchableDrop> {
   bool asTabs = false;
   String selectedValue;
   final List<DropdownMenuItem> items = [];
@@ -54,8 +53,9 @@ class _MyAppState extends State<MyApp> {
       "Patients": SearchableDropdown.single(
         items: items,
         value: selectedValue,
+        closeButton: 'Fermer',
         hint: "Sélectionner un patient",
-        searchHint: "chercher",
+        searchHint: "Chercher",
         onChanged: (value) {
           setState(() {
             selectedValue = value;
@@ -81,7 +81,7 @@ class _MyAppState extends State<MyApp> {
                               width: 0.0,
                             ),
                           ),
-                          margin: EdgeInsets.all(10),
+                          margin: EdgeInsets.all(0.0),
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Column(

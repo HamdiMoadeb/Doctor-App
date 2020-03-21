@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'appointments_list_page.dart';
 import 'patients_list_page.dart';
 import 'add_appointment_page.dart';
+import 'add_patient_page.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -56,12 +57,21 @@ class _MyHomePageState extends State<HomePage> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AddAppointment(),
-              ),
-            );
+            if (selectedIndex == 0) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddAppointment(),
+                ),
+              );
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddPatient(),
+                ),
+              );
+            }
           },
           tooltip: 'Increment',
           child: Icon(iconData),
