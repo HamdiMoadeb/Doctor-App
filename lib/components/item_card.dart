@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:doctor_app/models/appointment.dart';
 
 class ItemCard extends StatelessWidget {
-  ItemCard(
-      {@required this.context, @required this.index, @required this.listdvs});
+  ItemCard({
+    @required this.context,
+    @required this.index,
+    @required this.listdvs,
+  });
 
   final BuildContext context;
   final int index;

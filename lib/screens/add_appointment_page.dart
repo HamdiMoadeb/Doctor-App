@@ -72,6 +72,7 @@ class _State extends State<AddAppointment> {
     } else {
       chipData = chipsData[chipindex + 16];
     }
+
     return RawChip(
       label: Text(
         chipData.time,
@@ -118,21 +119,36 @@ class _State extends State<AddAppointment> {
           children: <Widget>[
             Expanded(
               flex: 1,
-              child: SearchableDrop(),
+              child: Center(
+                child: SearchableDrop(),
+              ),
             ),
             Expanded(
-              flex: 1,
-              child: DatePickerTimeline(
-                selectedDate,
-                height: 80.0,
-                locale: 'fr',
-                onDateChange: (date) {
-                  setState(() {
-                    selectedDate = date;
-                  });
-                  print(date.toString());
-                },
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 1,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Description',
+                    ),
+                  ),
+                ),
               ),
+            ),
+            DatePickerTimeline(
+              selectedDate,
+              height: 80.0,
+              locale: 'fr',
+              onDateChange: (date) {
+                setState(() {
+                  selectedDate = date;
+                });
+                print(date.toString());
+              },
             ),
             Expanded(
               flex: 4,
@@ -145,7 +161,7 @@ class _State extends State<AddAppointment> {
                         Text(
                           vehicles[i].title,
                           style: new TextStyle(
-                            fontSize: 24.0,
+                            fontSize: 22.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

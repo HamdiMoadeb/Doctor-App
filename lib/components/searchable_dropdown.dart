@@ -83,7 +83,7 @@ class _MyAppState extends State<SearchableDrop> {
                           ),
                           margin: EdgeInsets.all(0.0),
                           child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.all(5.0),
                             child: Column(
                               children: <Widget>[
                                 Text("$k:"),

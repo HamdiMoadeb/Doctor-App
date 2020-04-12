@@ -15,6 +15,7 @@ dependencies:
   flappy_search_bar: ^1.7.2
   autocomplete_textfield: ^1.7.3
   searchable_dropdown: ^1.1.2
+  flutter_screenutil: ^1.0.2
 
 
 dev_dependencies:
@@ -26,3 +27,7 @@ flutter:
 
   assets:
    - images/phoneicon.png
+   - images/login.png
+   - images/applogo.png
+   - images/logo.png
+   - images/doctor.png

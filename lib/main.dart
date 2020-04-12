@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:doctor_app/models/appointment.dart';
 import 'package:doctor_app/screens/home_page.dart';
+import 'screens/login_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(title: 'Doctor App'),
+      home: LoginPage(),
     );
   }
 }
