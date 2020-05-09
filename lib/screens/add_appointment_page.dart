@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:doctor_app/components/searchable_dropdown.dart';
+import 'home_page.dart';
 
 class AddAppointment extends StatefulWidget {
   @override
@@ -114,17 +115,17 @@ class _State extends State<AddAppointment> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(13.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Center(
                 child: SearchableDrop(),
               ),
-            ),
-            Expanded(
-              child: Center(
+              SizedBox(
+                height: 15.0,
+              ),
+              Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: TextField(
@@ -138,21 +139,25 @@ class _State extends State<AddAppointment> {
                   ),
                 ),
               ),
-            ),
-            DatePickerTimeline(
-              selectedDate,
-              height: 80.0,
-              locale: 'fr',
-              onDateChange: (date) {
-                setState(() {
-                  selectedDate = date;
-                });
-                print(date.toString());
-              },
-            ),
-            Expanded(
-              flex: 4,
-              child: ListView.builder(
+              SizedBox(
+                height: 15.0,
+              ),
+              DatePickerTimeline(
+                selectedDate,
+                height: 82.0,
+                locale: 'fr',
+                onDateChange: (date) {
+                  setState(() {
+                    selectedDate = date;
+                  });
+                  print(date);
+                },
+              ),
+              SizedBox(
+                height: 15.0,
+              ),
+              ListView.builder(
+                shrinkWrap: true,
                 itemCount: vehicles.length,
                 itemBuilder: (context, i) {
                   return new ExpansionTile(
@@ -201,28 +206,58 @@ class _State extends State<AddAppointment> {
                   );
                 },
               ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: Container(
-                  width: 200.0,
-                  child: RaisedButton(
-                    onPressed: () {},
-                    color: Colors.blue,
-                    child: Text(
-                      'Ajouter',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25.0,
+              SizedBox(
+                height: 20.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  InkWell(
+                    child: Container(
+                      width: 200.0,
+                      height: 50.0,
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(colors: [
+                            Color(0xFF17ead9),
+                            Colors.blue,
+                          ]),
+                          borderRadius: BorderRadius.circular(6.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.blue.withOpacity(.3),
+                              offset: Offset(0.0, 8.0),
+                              blurRadius: 8.0,
+                            ),
+                          ]),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomePage(),
+                              ),
+                            );
+                          },
+                          child: Center(
+                            child: Text(
+                              'AJOUTER',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Poppins-Bold',
+                                  fontSize: 18.0,
+                                  letterSpacing: 1.0),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

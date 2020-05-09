@@ -1,3 +1,4 @@
+import 'package:doctor_app/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:doctor_app/components/form_register.dart';
@@ -55,7 +56,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ],
                   ),
                   SizedBox(
-                    height: ScreenUtil().setHeight(120),
+                    height: ScreenUtil().setHeight(140),
                   ),
                   FormRegister(),
                   SizedBox(
@@ -84,7 +85,14 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: Material(
                             color: Colors.transparent,
                             child: InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => HomePage(),
+                                  ),
+                                );
+                              },
                               child: Center(
                                 child: Text(
                                   'REGISTER',
@@ -100,6 +108,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                     ],
+                  ),
+                  SizedBox(
+                    height: ScreenUtil().setHeight(30),
                   ),
                 ],
               ),

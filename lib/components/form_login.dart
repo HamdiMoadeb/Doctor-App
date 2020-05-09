@@ -1,12 +1,88 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:doctor_app/api_calls/api_auth.dart';
 
 class FormLogin extends StatelessWidget {
+  FormLogin({
+    @required this.docPhone,
+    @required this.docPassword,
+  });
+
+  final TextEditingController docPhone;
+  final TextEditingController docPassword;
+
+  TextEditingController _textFieldController = TextEditingController();
+
+  _showDialog(BuildContext context) async {
+    await showDialog<String>(
+      context: context,
+      child: new _SystemPadding(
+        child: new AlertDialog(
+          contentPadding: const EdgeInsets.all(16.0),
+          content: new Row(
+            children: <Widget>[
+              new Expanded(
+                child: new TextField(
+                  autofocus: true,
+                  decoration: new InputDecoration(
+                      labelText: 'Full Name', hintText: 'eg. John Smith'),
+                ),
+              )
+            ],
+          ),
+          actions: <Widget>[
+            new FlatButton(
+                child: const Text('CANCEL'),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+            new FlatButton(
+                child: const Text('OPEN'),
+                onPressed: () {
+                  Navigator.pop(context);
+                })
+          ],
+        ),
+      ),
+    );
+  }
+
+  _displayDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Forgot Password'),
+            content: TextField(
+              controller: _textFieldController,
+              decoration: InputDecoration(hintText: "email"),
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                  child: const Text('CANCEL'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+              new FlatButton(
+                  child: const Text('SEND'),
+                  onPressed: () {
+                    final body = {
+                      "email": _textFieldController.text.toString(),
+                    };
+                    ApiAuth.forgot_password(body).then((success) {
+                      Navigator.pop(context);
+                    });
+                  })
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: ScreenUtil().setHeight(430),
+      height: ScreenUtil().setHeight(450),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8.0),
@@ -40,7 +116,7 @@ class FormLogin extends StatelessWidget {
               height: ScreenUtil().setHeight(30),
             ),
             Text(
-              'Username',
+              'Phone',
               style: TextStyle(
                 fontFamily: 'Poppins-Medium',
                 fontSize: ScreenUtil().setSp(26),
@@ -48,8 +124,9 @@ class FormLogin extends StatelessWidget {
               ),
             ),
             TextField(
+              controller: docPhone,
               decoration: InputDecoration(
-                hintText: 'username',
+                hintText: 'phone',
                 hintStyle: TextStyle(
                   color: Colors.grey,
                   fontSize: 12.0,
@@ -68,6 +145,7 @@ class FormLogin extends StatelessWidget {
               ),
             ),
             TextField(
+              controller: docPassword,
               obscureText: true,
               decoration: InputDecoration(
                 hintText: 'password',
@@ -78,17 +156,20 @@ class FormLogin extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: ScreenUtil().setHeight(35),
+              height: ScreenUtil().setHeight(15),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Text(
-                  'Forgot Password ?',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontFamily: 'Poppins-Medium',
-                    fontSize: ScreenUtil().setSp(28),
+                FlatButton(
+                  onPressed: () => _displayDialog(context),
+                  child: Text(
+                    'Forgot Password ?',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontFamily: 'Poppins-Medium',
+                      fontSize: ScreenUtil().setSp(28),
+                    ),
                   ),
                 ),
               ],
@@ -97,5 +178,20 @@ class FormLogin extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _SystemPadding extends StatelessWidget {
+  final Widget child;
+
+  _SystemPadding({Key key, this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
+    return new AnimatedContainer(
+        padding: mediaQuery.viewInsets,
+        duration: const Duration(milliseconds: 300),
+        child: child);
   }
 }

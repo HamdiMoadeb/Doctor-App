@@ -1,8 +1,13 @@
+import 'package:doctor_app/api_calls/api_auth.dart';
+import 'package:doctor_app/models/doctor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:doctor_app/components/form_login.dart';
 import 'package:flutter/services.dart';
 import 'package:doctor_app/screens/register_page.dart';
+import 'dart:convert';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -16,6 +21,10 @@ class _LoginPageState extends State<LoginPage> {
       _isSelected = !_isSelected;
     });
   }
+
+  var docPhoneController = TextEditingController();
+  var docPassController = TextEditingController();
+  ProgressDialog pr;
 
   Widget radioButton(bool isSelected) => Container(
         width: 16.0,
@@ -38,6 +47,20 @@ class _LoginPageState extends State<LoginPage> {
       );
   @override
   Widget build(BuildContext context) {
+    pr = new ProgressDialog(context, isDismissible: false);
+    pr.style(
+        message: 'Please wait...',
+        borderRadius: 10.0,
+        backgroundColor: Colors.white,
+        progressWidget: CircularProgressIndicator(),
+        elevation: 10.0,
+        insetAnimCurve: Curves.easeInOut,
+        progress: 0.0,
+        maxProgress: 100.0,
+        progressTextStyle: TextStyle(
+            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+        messageTextStyle: TextStyle(
+            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.blue,
     ));
@@ -65,11 +88,6 @@ class _LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                   Row(
                     children: <Widget>[
-                      /*Image.asset(
-                        'images/logo.png',
-                        width: ScreenUtil().setWidth(110),
-                        height: ScreenUtil().setHeight(110),
-                      ),*/
                       Text(
                         'DOCTOR APP',
                         style: TextStyle(
@@ -84,14 +102,17 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                     height: ScreenUtil().setHeight(300),
                   ),
-                  FormLogin(),
+                  FormLogin(
+                    docPhone: docPhoneController,
+                    docPassword: docPassController,
+                  ),
                   SizedBox(
                     height: ScreenUtil().setHeight(40),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Row(
+                      /*Row(
                         children: <Widget>[
                           SizedBox(
                             width: 12.0,
@@ -111,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ],
-                      ),
+                      ),*/
                       InkWell(
                         child: Container(
                           width: ScreenUtil().setWidth(330),
@@ -133,12 +154,53 @@ class _LoginPageState extends State<LoginPage> {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => RegisterPage(),
-                                  ),
-                                );
+                                pr.show();
+                                FocusScope.of(context).unfocus();
+                                final body = {
+                                  "phone": docPhoneController.text.toString(),
+                                  "password": docPassController.text.toString(),
+                                };
+                                ApiAuth.login(body).then((success) {
+                                  String response = json
+                                      .decode(success)['response']
+                                      .toString();
+                                  if (response == 'true') {
+                                    Doctor doctor = Doctor.fromJson(
+                                        json.decode(success)['doc']);
+                                    print(doctor.fullname);
+                                    pr.hide().whenComplete(() {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => HomePage(),
+                                        ),
+                                      );
+                                    });
+                                  } else {
+                                    String message = json
+                                        .decode(success)['message']
+                                        .toString();
+                                    pr.hide().whenComplete(() {
+                                      showDialog(
+                                        builder: (context) => AlertDialog(
+                                          title: Text(message),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                docPhoneController.text = '';
+                                                docPassController.text = '';
+                                              },
+                                              child: Text('OK'),
+                                            )
+                                          ],
+                                        ),
+                                        context: context,
+                                      );
+                                    });
+                                  }
+                                  return;
+                                });
                               },
                               child: Center(
                                 child: Text(
@@ -155,6 +217,30 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ],
+                  ),
+                  SizedBox(
+                    height: ScreenUtil().setHeight(70),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: FlatButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RegisterPage(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Or Create Account',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontFamily: 'Poppins-Medium',
+                          fontSize: ScreenUtil().setSp(28),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),

@@ -6,7 +6,7 @@ class FormRegister extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: ScreenUtil().setHeight(880),
+      height: ScreenUtil().setHeight(920),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8.0),
