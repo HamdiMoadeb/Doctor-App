@@ -2,6 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FormRegister extends StatelessWidget {
+  FormRegister({
+    @required this.fullname,
+    @required this.phone,
+    @required this.email,
+    @required this.speciality,
+    @required this.address,
+    @required this.password,
+  });
+
+  final TextEditingController fullname;
+  final TextEditingController phone;
+  final TextEditingController email;
+  final TextEditingController speciality;
+  final TextEditingController address;
+  final TextEditingController password;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -48,6 +64,7 @@ class FormRegister extends StatelessWidget {
               ),
             ),
             TextField(
+              controller: fullname,
               decoration: InputDecoration(
                 hintText: 'fullname',
                 hintStyle: TextStyle(
@@ -68,6 +85,7 @@ class FormRegister extends StatelessWidget {
               ),
             ),
             TextField(
+              controller: phone,
               decoration: InputDecoration(
                 hintText: 'phone',
                 hintStyle: TextStyle(
@@ -88,6 +106,7 @@ class FormRegister extends StatelessWidget {
               ),
             ),
             TextField(
+              controller: email,
               decoration: InputDecoration(
                 hintText: 'email',
                 hintStyle: TextStyle(
@@ -108,6 +127,7 @@ class FormRegister extends StatelessWidget {
               ),
             ),
             TextField(
+              controller: speciality,
               decoration: InputDecoration(
                 hintText: 'specialty',
                 hintStyle: TextStyle(
@@ -128,6 +148,7 @@ class FormRegister extends StatelessWidget {
               ),
             ),
             TextField(
+              controller: address,
               decoration: InputDecoration(
                 hintText: 'address',
                 hintStyle: TextStyle(
@@ -148,6 +169,7 @@ class FormRegister extends StatelessWidget {
               ),
             ),
             TextField(
+              controller: password,
               obscureText: true,
               decoration: InputDecoration(
                 hintText: 'password',

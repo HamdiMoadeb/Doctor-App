@@ -154,8 +154,9 @@ class _LoginPageState extends State<LoginPage> {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () {
-                                pr.show();
                                 FocusScope.of(context).unfocus();
+                                pr.show();
+
                                 final body = {
                                   "phone": docPhoneController.text.toString(),
                                   "password": docPassController.text.toString(),

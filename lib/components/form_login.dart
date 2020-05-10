@@ -13,40 +13,6 @@ class FormLogin extends StatelessWidget {
 
   TextEditingController _textFieldController = TextEditingController();
 
-  _showDialog(BuildContext context) async {
-    await showDialog<String>(
-      context: context,
-      child: new _SystemPadding(
-        child: new AlertDialog(
-          contentPadding: const EdgeInsets.all(16.0),
-          content: new Row(
-            children: <Widget>[
-              new Expanded(
-                child: new TextField(
-                  autofocus: true,
-                  decoration: new InputDecoration(
-                      labelText: 'Full Name', hintText: 'eg. John Smith'),
-                ),
-              )
-            ],
-          ),
-          actions: <Widget>[
-            new FlatButton(
-                child: const Text('CANCEL'),
-                onPressed: () {
-                  Navigator.pop(context);
-                }),
-            new FlatButton(
-                child: const Text('OPEN'),
-                onPressed: () {
-                  Navigator.pop(context);
-                })
-          ],
-        ),
-      ),
-    );
-  }
-
   _displayDialog(BuildContext context) async {
     return showDialog(
         context: context,
