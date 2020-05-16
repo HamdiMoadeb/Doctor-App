@@ -8,6 +8,8 @@ import 'package:doctor_app/screens/register_page.dart';
 import 'dart:convert';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'home_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -25,6 +27,13 @@ class _LoginPageState extends State<LoginPage> {
   var docPhoneController = TextEditingController();
   var docPassController = TextEditingController();
   ProgressDialog pr;
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  Future<void> _saveTokenAndId(String token, String id) async {
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setString('token', token);
+    await prefs.setString('idDoc', id);
+  }
 
   Widget radioButton(bool isSelected) => Container(
         width: 16.0,
@@ -45,6 +54,7 @@ class _LoginPageState extends State<LoginPage> {
               )
             : Container(),
       );
+
   @override
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context, isDismissible: false);
@@ -168,7 +178,11 @@ class _LoginPageState extends State<LoginPage> {
                                   if (response == 'true') {
                                     Doctor doctor = Doctor.fromJson(
                                         json.decode(success)['doc']);
-                                    print(doctor.fullname);
+                                    String token = json
+                                        .decode(success)['token']
+                                        .toString();
+                                    print(token);
+                                    _saveTokenAndId(token, doctor.id);
                                     pr.hide().whenComplete(() {
                                       Navigator.push(
                                         context,

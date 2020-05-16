@@ -21,7 +21,7 @@ class ItemCardPatient extends StatelessWidget {
               Row(
                 children: <Widget>[
                   CircleAvatar(
-                    radius: 30.0,
+                    radius: 25.0,
                     backgroundImage: NetworkImage(patient.photourl),
                   ),
                   SizedBox(
@@ -32,10 +32,10 @@ class ItemCardPatient extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        patient.full_name,
+                        patient.firstname + ' ' + patient.lastname,
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          fontSize: 22.0,
+                          fontSize: 20.0,
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                         ),
@@ -45,7 +45,7 @@ class ItemCardPatient extends StatelessWidget {
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           // backgroundColor: Color(0x29ED34E3),
-                          fontSize: 18.0,
+                          fontSize: 15.0,
                           color: Colors.grey.shade500,
                         ),
                       ),
@@ -61,24 +61,40 @@ class ItemCardPatient extends StatelessWidget {
                 children: <Widget>[
                   Icon(
                     Icons.today,
-                    color: Colors.grey.shade400,
-                    size: 18.0,
+                    color: Colors.redAccent,
+                    size: 17.0,
                   ),
                   SizedBox(
                     width: 2.0,
                   ),
                   Text(
-                    patient.datebirth,
+                    patient.birthday,
                     style: TextStyle(
-                      fontSize: 15.0,
-                      color: Colors.grey.shade500,
+                      fontSize: 14.0,
+                      color: Colors.redAccent,
                     ),
                   ),
                   new Spacer(),
-                  CircleAvatar(
+                  Icon(
+                    Icons.phone,
+                    color: Colors.green,
+                    size: 18.0,
+                  ),
+                  SizedBox(
+                    width: 3.0,
+                  ),
+                  Text(
+                    patient.phone,
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      color: Colors.green,
+                    ),
+                  ),
+
+                  /*CircleAvatar(
                     radius: 18.0,
                     backgroundImage: AssetImage('images/phoneicon.png'),
-                  ),
+                  ),*/
                 ],
               ),
             ],
