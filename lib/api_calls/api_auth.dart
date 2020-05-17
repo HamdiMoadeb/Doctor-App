@@ -1,22 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
-class URLS {
-  static const String BASE_URL = 'https://node-docapp.herokuapp.com/doc';
-}
+import 'package:doctor_app/api_calls/urls.dart';
 
 class ApiAuth {
-  static Future<List<dynamic>> getEmployees() async {
-    final response = await http.get('${URLS.BASE_URL}/all');
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      return null;
-    }
-  }
-
   static Future<String> login(body) async {
-    final response = await http.post('${URLS.BASE_URL}/login',
+    final response = await http.post('${URLS.BASE_URL}/doc/login',
         body: jsonEncode(body), headers: {"Content-type": "application/json"});
     if (response.statusCode == 404) {
       print(response.body);
@@ -28,7 +16,7 @@ class ApiAuth {
   }
 
   static Future<String> register(body) async {
-    final response = await http.post('${URLS.BASE_URL}/register',
+    final response = await http.post('${URLS.BASE_URL}/doc/register',
         body: jsonEncode(body), headers: {"Content-type": "application/json"});
     if (response.statusCode == 404) {
       print(response.body);
@@ -40,7 +28,7 @@ class ApiAuth {
   }
 
   static Future<String> forgot_password(body) async {
-    final response = await http.post('${URLS.BASE_URL}/forgotPassword',
+    final response = await http.post('${URLS.BASE_URL}/doc/forgotPassword',
         body: jsonEncode(body), headers: {"Content-type": "application/json"});
     if (response.statusCode == 404) {
       print(response.body);

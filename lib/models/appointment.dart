@@ -1,19 +1,39 @@
+import 'package:doctor_app/api_calls/urls.dart';
+
 class Appointment {
   Appointment(
+    this.etat,
+    this.createdAt,
+    this.id,
+    this.idPatient,
+    this.imagePatient,
+    this.namePatient,
+    this.description,
     this.date,
-    this.full_name,
-    this.phone,
-    this.tag,
-    this.time,
-    this.title,
-    this.photourl,
+    this.heure,
+    this.createdBy,
   );
 
-  final String full_name;
-  final String phone;
-  final String title;
-  final String tag;
-  final String date;
-  final String time;
-  final String photourl;
+  int etat;
+  String createdAt;
+  String id;
+  String idPatient;
+  String imagePatient;
+  String namePatient;
+  String description;
+  String date;
+  int heure;
+  String createdBy;
+
+  Appointment.fromJson(Map<String, dynamic> json)
+      : etat = json['etat'],
+        createdAt = json['createdAt'],
+        id = json['_id'],
+        description = json['description'],
+        date = json['date'],
+        heure = json['heure'],
+        createdBy = json['createdBy'],
+        idPatient = json['idPatient'],
+        namePatient = json['fullnamePatient'],
+        imagePatient = URLS.BASE_URL + '/' + json['imagePatient'];
 }

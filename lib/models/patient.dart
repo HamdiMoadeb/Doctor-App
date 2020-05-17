@@ -1,3 +1,5 @@
+import 'package:doctor_app/api_calls/urls.dart';
+
 class Patient {
   final String id;
   final String firstname;
@@ -23,6 +25,5 @@ class Patient {
         gender = json['gender'],
         phone = json['phone'],
         email = json['email'],
-        photourl =
-            'https://outpostrecruitment.com/wp-content/uploads/2019/05/Ruairi-Spillane.png';
+        photourl = URLS.BASE_URL + '/' + json['image'];
 }

@@ -5,7 +5,6 @@ import 'package:doctor_app/components/form_add_patient.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:doctor_app/api_calls/api_patient.dart';
 import 'dart:convert';
-import 'package:doctor_app/screens/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';

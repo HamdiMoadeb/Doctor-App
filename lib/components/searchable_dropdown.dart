@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
+import 'package:doctor_app/api_calls/api_patient.dart';
+import 'package:doctor_app/models/patient.dart';
 
 class SearchableDrop extends StatefulWidget {
+  SearchableDrop({Key key, this.callback}) : super(key: key);
+
+  Function(String) callback;
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -11,38 +17,53 @@ class _MyAppState extends State<SearchableDrop> {
   String selectedValue;
   final List<DropdownMenuItem> items = [];
 
-  List<String> patients = [
-    'Hamdi Moadeb',
-    'Mahmoud Ghandour',
-    'Ayoub Ghozzi',
-    'Donia Azib'
-  ];
+  List<Patient> patientsL = [];
+
+  String getPatientId(String name) {
+    String id = "";
+    for (Patient pat in patientsL) {
+      String full = pat.firstname + ' ' + pat.lastname;
+      if (full == name) {
+        id = pat.id;
+      }
+    }
+    return id;
+  }
+
+  void _allPatients() {
+    ApiPatient.getAllPatients().then((patients) => {
+          patientsL = patients,
+          for (Patient pat in patients)
+            {
+              setState(() {
+                items.add(
+                  DropdownMenuItem(
+                    child: Row(
+                      children: <Widget>[
+                        CircleAvatar(
+                          radius: 20.0,
+                          backgroundImage: NetworkImage(pat.photourl),
+                        ),
+                        SizedBox(
+                          width: 10.0,
+                        ),
+                        Text(
+                          pat.firstname + ' ' + pat.lastname,
+                          style: TextStyle(fontSize: 20.0),
+                        ),
+                      ],
+                    ),
+                    value: pat.firstname + ' ' + pat.lastname,
+                  ),
+                );
+              }),
+            }
+        });
+  }
 
   @override
   void initState() {
-    for (String pat in patients) {
-      items.add(
-        DropdownMenuItem(
-          child: Row(
-            children: <Widget>[
-              CircleAvatar(
-                radius: 20.0,
-                backgroundImage: NetworkImage(
-                    'https://careermetis.com/wp-content/uploads/2017/11/GC-ML-IMG_4366_009.jpg'),
-              ),
-              SizedBox(
-                width: 10.0,
-              ),
-              Text(
-                pat,
-                style: TextStyle(fontSize: 20.0),
-              ),
-            ],
-          ),
-          value: pat,
-        ),
-      );
-    }
+    _allPatients();
     super.initState();
   }
 
@@ -58,6 +79,7 @@ class _MyAppState extends State<SearchableDrop> {
         searchHint: "Chercher",
         onChanged: (value) {
           setState(() {
+            widget.callback(getPatientId(value));
             selectedValue = value;
           });
         },
@@ -71,26 +93,29 @@ class _MyAppState extends State<SearchableDrop> {
         children: widgets
             .map((k, v) {
               return (MapEntry(
-                  k,
-                  Center(
-                      child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: BorderSide(
-                              color: Colors.grey,
-                              width: 0.0,
-                            ),
-                          ),
-                          margin: EdgeInsets.all(0.0),
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Column(
-                              children: <Widget>[
-                                Text("$k:"),
-                                v,
-                              ],
-                            ),
-                          )))));
+                k,
+                Center(
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      side: BorderSide(
+                        color: Colors.grey,
+                        width: 0.0,
+                      ),
+                    ),
+                    margin: EdgeInsets.all(0.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Column(
+                        children: <Widget>[
+                          Text("$k:"),
+                          v,
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ));
             })
             .values
             .toList(),

@@ -1,7 +1,11 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:doctor_app/components/searchable_dropdown.dart';
-import 'home_page.dart';
+import 'dart:convert';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:doctor_app/api_calls/api_appointment.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddAppointment extends StatefulWidget {
   @override
@@ -13,37 +17,56 @@ class _State extends State<AddAppointment> {
   var data = ['Small', 'Medium', 'Large', 'XLarge'];
   int _value = 1;
   bool status = false;
+
+  ProgressDialog pr;
   DateTime selectedDate = DateTime.now();
+  String patientId = "";
+  var descController = TextEditingController();
 
   List<ChipData> chipsData = [
     //Matin
-    ChipData(' 8:00 AM', false, true, 0),
+    ChipData('8:00 AM', false, true, 0),
     ChipData('8:30 AM', false, true, 0),
-    ChipData('9:00 AM', false, false, 0),
+    ChipData('9:00 AM', false, true, 0),
     ChipData('9:30 AM', false, true, 0),
     ChipData('10:00 AM', false, true, 0),
-    ChipData('10:30 AM', false, false, 0),
+    ChipData('10:30 AM', false, true, 0),
     ChipData('11:00 AM', false, true, 0),
     ChipData('11:30 AM', false, true, 0),
     //Midi
     ChipData('12:00 PM', false, true, 1),
     ChipData('12:30 PM', false, true, 1),
-    ChipData('1:00 PM', false, false, 1),
+    ChipData('1:00 PM', false, true, 1),
     ChipData('1:30 PM', false, true, 1),
     ChipData('2:00 PM', false, true, 1),
-    ChipData('2:30 PM', false, false, 1),
+    ChipData('2:30 PM', false, true, 1),
     ChipData('3:00 PM', false, true, 1),
     ChipData('3:30 PM', false, true, 1),
     //Soir
     ChipData('4:00 PM', false, true, 2),
     ChipData('4:30 PM', false, true, 2),
-    ChipData('5:00 PM', false, false, 2),
+    ChipData('5:00 PM', false, true, 2),
     ChipData('5:30 PM', false, true, 2),
     ChipData('6:00 PM', false, true, 2),
-    ChipData('6:30 PM', false, false, 2),
+    ChipData('6:30 PM', false, true, 2),
     ChipData('7:00 PM', false, true, 2),
     ChipData('7:30 PM', false, true, 2),
   ];
+
+  getHoursByDate(String date) {
+    final body = {
+      "date": date.toString(),
+    };
+    ApiAppointment.getHoursByDate(body).then((success) {
+      List<dynamic> list = json.decode(success);
+      for (dynamic i in list) {
+        print('getHoursByDate : $i');
+        setState(() {
+          chipsData[i].enabled = false;
+        });
+      }
+    });
+  }
 
   int getChipClicked(String time) {
     for (var i = 0; i < chipsData.length; i++) {
@@ -56,11 +79,27 @@ class _State extends State<AddAppointment> {
     }
   }
 
-  void setChipNotSelected(int index) {
+  int getSelectedChip() {
+    int selected = -1;
+    for (var i = 0; i < chipsData.length; i++) {
+      if (chipsData[i].selected == true) {
+        selected = i;
+      }
+    }
+    return selected;
+  }
+
+  setChipNotSelected(int index) {
     for (var i = 0; i < chipsData.length; i++) {
       if (i != index) {
         chipsData[i].selected = false;
       }
+    }
+  }
+
+  setAllChipsEnabled() {
+    for (var i = 0; i < chipsData.length; i++) {
+      chipsData[i].enabled = true;
     }
   }
 
@@ -78,7 +117,7 @@ class _State extends State<AddAppointment> {
       label: Text(
         chipData.time,
         style: TextStyle(
-          fontSize: 15.0,
+          fontSize: 14.0,
           color: Colors.white,
         ),
       ),
@@ -88,7 +127,7 @@ class _State extends State<AddAppointment> {
       selected: chipData.selected,
       checkmarkColor: Colors.black45,
       isEnabled: chipData.enabled,
-      disabledColor: Colors.red.shade100,
+      disabledColor: Colors.grey.shade300,
       selectedColor: Colors.blue,
       onSelected: (bool isSelected) {
         setState(() {
@@ -107,8 +146,44 @@ class _State extends State<AddAppointment> {
     );
   }
 
+  callbackPatient(newPat) {
+    setState(() {
+      //birthdayController = newPat;
+      print('ID CALLBACK @@@@@ $newPat');
+      patientId = newPat;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getHoursByDate(selectedDate.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
+    Future<String> getDocId() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString('idDoc');
+      return token;
+    }
+
+    pr = new ProgressDialog(context, isDismissible: false);
+    pr.style(
+        message: 'Please wait...',
+        borderRadius: 10.0,
+        backgroundColor: Colors.white,
+        progressWidget: CircularProgressIndicator(),
+        elevation: 10.0,
+        insetAnimCurve: Curves.easeInOut,
+        progress: 0.0,
+        maxProgress: 100.0,
+        progressTextStyle: TextStyle(
+            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+        messageTextStyle: TextStyle(
+            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Ajouter un RDV'),
@@ -120,7 +195,7 @@ class _State extends State<AddAppointment> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Center(
-                child: SearchableDrop(),
+                child: SearchableDrop(callback: callbackPatient),
               ),
               SizedBox(
                 height: 15.0,
@@ -129,6 +204,7 @@ class _State extends State<AddAppointment> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: TextField(
+                    controller: descController,
                     keyboardType: TextInputType.multiline,
                     maxLines: 1,
                     obscureText: false,
@@ -147,6 +223,8 @@ class _State extends State<AddAppointment> {
                 height: 82.0,
                 locale: 'fr',
                 onDateChange: (date) {
+                  setAllChipsEnabled();
+                  getHoursByDate(date.toString());
                   setState(() {
                     selectedDate = date;
                   });
@@ -166,14 +244,14 @@ class _State extends State<AddAppointment> {
                         Text(
                           vehicles[i].title,
                           style: new TextStyle(
-                            fontSize: 22.0,
+                            fontSize: 20.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
                           vehicles[i].time,
                           style: new TextStyle(
-                            fontSize: 15.0,
+                            fontSize: 14.0,
                             color: Colors.grey,
                           ),
                         ),
@@ -232,13 +310,38 @@ class _State extends State<AddAppointment> {
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HomePage(),
-                              ),
-                            );
+                          onTap: () async {
+                            pr.show();
+                            String createdby = await getDocId();
+                            final body = {
+                              "idPatient": patientId,
+                              "createdBy": createdby,
+                              "description": descController.text.toString(),
+                              "date": selectedDate.toString(),
+                              "heure": getSelectedChip(),
+                            };
+                            ApiAppointment.addAppointment(body).then((success) {
+                              String response =
+                                  json.decode(success)['response'].toString();
+                              if (response == 'true') {
+                                pr.hide().whenComplete(() {
+                                  //TODO show success message (Toast)
+                                  if (Navigator.canPop(context)) {
+                                    Navigator.pop(context);
+                                  } else {
+                                    SystemNavigator.pop();
+                                  }
+                                });
+                              } else {
+                                String message =
+                                    json.decode(success)['message'].toString();
+                                pr.hide().whenComplete(() {
+                                  print(message);
+                                  //TODO show error message (Toast)
+                                });
+                              }
+                              return;
+                            });
                           },
                           child: Center(
                             child: Text(
@@ -277,82 +380,6 @@ class _State extends State<AddAppointment> {
     return columnContent;
   }
 }
-
-/*class AddAppointment extends StatelessWidget {
-  bool isSelected = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Ajouter un RDV'),
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              child: Center(
-                child: InputChip(
-                  label: Text('Place'),
-                  labelStyle: TextStyle(color: Colors.white),
-                  backgroundColor: Colors.red,
-                  onSelected: (bool value) {
-                    setState(() {
-                      isSelected = value;
-                    });
-                  },
-                  deleteIcon: Icon(
-                    Icons.delete,
-                    color: Colors.white,
-                  ),
-                  onDeleted: () {
-                    print('delete');
-                  },
-                  selected: isSelected,
-                  selectedColor: Colors.green,
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: vehicles.length,
-              itemBuilder: (context, i) {
-                return new ExpansionTile(
-                  title: Row(
-                    children: <Widget>[
-                      Text(
-                        vehicles[i].title,
-                        style: new TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        vehicles[i].time,
-                        style: new TextStyle(
-                          fontSize: 15.0,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                  children: <Widget>[
-                    new Column(
-                      children: _buildExpandableContent(vehicles[i]),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-
-}*/
 
 class ChipData {
   String time;
