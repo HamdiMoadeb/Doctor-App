@@ -6,13 +6,22 @@ import 'dart:convert';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:doctor_app/api_calls/api_appointment.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:doctor_app/models/patient.dart';
 
 class AddAppointment extends StatefulWidget {
+  AddAppointment({this.patient});
+
+  final Patient patient;
+
   @override
-  _State createState() => _State();
+  _State createState() => _State(patient: patient);
 }
 
 class _State extends State<AddAppointment> {
+  _State({this.patient});
+
+  final Patient patient;
+
   bool isSelected = false;
   var data = ['Small', 'Medium', 'Large', 'XLarge'];
   int _value = 1;
@@ -195,7 +204,10 @@ class _State extends State<AddAppointment> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Center(
-                child: SearchableDrop(callback: callbackPatient),
+                child: SearchableDrop(
+                  callback: callbackPatient,
+                  patientSelected: patient,
+                ),
               ),
               SizedBox(
                 height: 15.0,

@@ -48,7 +48,7 @@ class FormLogin extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: ScreenUtil().setHeight(450),
+      height: ScreenUtil().setHeight(515),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8.0),

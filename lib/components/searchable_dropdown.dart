@@ -4,15 +4,19 @@ import 'package:doctor_app/api_calls/api_patient.dart';
 import 'package:doctor_app/models/patient.dart';
 
 class SearchableDrop extends StatefulWidget {
-  SearchableDrop({Key key, this.callback}) : super(key: key);
+  SearchableDrop({Key key, this.callback, this.patientSelected})
+      : super(key: key);
 
   Function(String) callback;
+  Patient patientSelected;
 
   @override
-  _MyAppState createState() => _MyAppState();
+  _MyAppState createState() => _MyAppState(patientSelected: patientSelected);
 }
 
 class _MyAppState extends State<SearchableDrop> {
+  _MyAppState({this.patientSelected});
+  Patient patientSelected;
   bool asTabs = false;
   String selectedValue;
   final List<DropdownMenuItem> items = [];
@@ -31,34 +35,63 @@ class _MyAppState extends State<SearchableDrop> {
   }
 
   void _allPatients() {
-    ApiPatient.getAllPatients().then((patients) => {
-          patientsL = patients,
-          for (Patient pat in patients)
-            {
-              setState(() {
-                items.add(
-                  DropdownMenuItem(
-                    child: Row(
-                      children: <Widget>[
-                        CircleAvatar(
-                          radius: 20.0,
-                          backgroundImage: NetworkImage(pat.photourl),
-                        ),
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        Text(
-                          pat.firstname + ' ' + pat.lastname,
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                      ],
+    if (patientSelected != null) {
+      setState(() {
+        items.add(
+          DropdownMenuItem(
+            child: Row(
+              children: <Widget>[
+                CircleAvatar(
+                  radius: 20.0,
+                  backgroundImage: NetworkImage(patientSelected.photourl),
+                ),
+                SizedBox(
+                  width: 10.0,
+                ),
+                Text(
+                  patientSelected.firstname + ' ' + patientSelected.lastname,
+                  style: TextStyle(fontSize: 20.0),
+                ),
+              ],
+            ),
+            value: patientSelected.firstname + ' ' + patientSelected.lastname,
+          ),
+        );
+
+        selectedValue =
+            patientSelected.firstname + ' ' + patientSelected.lastname;
+        print('====>' + selectedValue);
+      });
+    } else {
+      ApiPatient.getAllPatients().then((patients) => {
+            patientsL = patients,
+            for (Patient pat in patients)
+              {
+                setState(() {
+                  items.add(
+                    DropdownMenuItem(
+                      child: Row(
+                        children: <Widget>[
+                          CircleAvatar(
+                            radius: 20.0,
+                            backgroundImage: NetworkImage(pat.photourl),
+                          ),
+                          SizedBox(
+                            width: 10.0,
+                          ),
+                          Text(
+                            pat.firstname + ' ' + pat.lastname,
+                            style: TextStyle(fontSize: 20.0),
+                          ),
+                        ],
+                      ),
+                      value: pat.firstname + ' ' + pat.lastname,
                     ),
-                    value: pat.firstname + ' ' + pat.lastname,
-                  ),
-                );
-              }),
-            }
-        });
+                  );
+                }),
+              }
+          });
+    }
   }
 
   @override
@@ -71,7 +104,7 @@ class _MyAppState extends State<SearchableDrop> {
   Widget build(BuildContext context) {
     Map<String, SearchableDropdown> widgets;
     widgets = {
-      "Patients": SearchableDropdown.single(
+      "Patients": SearchableDropdown(
         items: items,
         value: selectedValue,
         closeButton: 'Fermer',
@@ -84,6 +117,7 @@ class _MyAppState extends State<SearchableDrop> {
           });
         },
         isExpanded: true,
+        disabledHint: 'Loading..',
       ),
     };
 

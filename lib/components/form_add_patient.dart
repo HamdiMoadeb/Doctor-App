@@ -95,7 +95,7 @@ class FormAddPatient extends State<FormAddPatientStful> {
 
     return Container(
       width: double.infinity,
-      height: ScreenUtil().setHeight(1220),
+      height: ScreenUtil().setHeight(1420),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8.0),

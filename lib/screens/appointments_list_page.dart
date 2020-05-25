@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:doctor_app/components/item_card.dart';
-import 'package:doctor_app/models/appointment.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:doctor_app/api_calls/api_appointment.dart';
 
@@ -19,21 +18,17 @@ class AppointmentsListState extends State<AppointmentsList> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: DatePickerTimeline(
-            selectedDate,
-            height: 80.0,
-            locale: 'fr',
-            onDateChange: (date) {
-              setState(() {
-                selectedDate = date;
-              });
-            },
-          ),
+        DatePickerTimeline(
+          selectedDate,
+          height: 85.0,
+          locale: 'fr',
+          onDateChange: (date) {
+            setState(() {
+              selectedDate = date;
+            });
+          },
         ),
         Expanded(
-          flex: 7,
           child: FutureBuilder(
             future: ApiAppointment.getAllAppointmentsByDay({
               "date": selectedDate.toString(),

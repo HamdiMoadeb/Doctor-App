@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:doctor_app/models/appointment.dart';
 import 'package:intl/intl.dart';
+import 'package:doctor_app/screens/appointment_dtails_page.dart';
 
 class ItemCard extends StatelessWidget {
   ItemCard({
@@ -108,101 +109,119 @@ class ItemCard extends StatelessWidget {
     String dateRDV = new DateFormat.yMd('fr_FR').format(dateTime).toString();
     print(dateRDV);
     return Container(
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  CircleAvatar(
-                    radius: 25.0,
-                    backgroundImage: NetworkImage(appointment.imagePatient),
-                  ),
-                  SizedBox(
-                    width: 15.0,
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        appointment.namePatient,
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Container(
-                        width: 290.0,
-                        padding: new EdgeInsets.only(right: 5.0),
-                        child: Text(
-                          appointment.description,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            // backgroundColor: Color(0x29ED34E3),
-                            fontSize: 15.0,
-                            color: Colors.grey.shade500,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AppointmentDetails(
+                appointment: appointment,
+              ),
+            ),
+          );
+        },
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 25.0,
+                      backgroundImage: NetworkImage(appointment.imagePatient),
+                    ),
+                    SizedBox(
+                      width: 15.0,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Container(
+                          width: 250.0,
+                          child: Text(
+                            appointment.namePatient,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: 22.0,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
+                        Container(
+                          width: 250.0,
+                          child: Text(
+                            appointment.description,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              // backgroundColor: Color(0x29ED34E3),
+                              fontSize: 15.0,
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    new Spacer(),
+                    /*CircleAvatar(
+                      radius: 15.0,
+                      backgroundImage: AssetImage('images/phoneicon.png'),
+                    ),*/
+                  ],
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Icon(
+                      Icons.today,
+                      color: Colors.grey.shade400,
+                      size: 17.0,
+                    ),
+                    SizedBox(
+                      width: 2.0,
+                    ),
+                    Text(
+                      dateRDV,
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.grey.shade500,
                       ),
-                    ],
-                  ),
-                  new Spacer(),
-                  /*CircleAvatar(
-                    radius: 15.0,
-                    backgroundImage: AssetImage('images/phoneicon.png'),
-                  ),*/
-                ],
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Icon(
-                    Icons.today,
-                    color: Colors.grey.shade400,
-                    size: 17.0,
-                  ),
-                  SizedBox(
-                    width: 2.0,
-                  ),
-                  Text(
-                    dateRDV,
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      color: Colors.grey.shade500,
                     ),
-                  ),
-                  SizedBox(
-                    width: 5.0,
-                  ),
-                  Icon(
-                    Icons.access_time,
-                    color: Colors.redAccent,
-                    size: 17.0,
-                  ),
-                  Text(
-                    getHour(appointment.heure),
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.bold,
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Icon(
+                      Icons.access_time,
                       color: Colors.redAccent,
+                      size: 17.0,
                     ),
-                  ),
-                  new Spacer(),
-                  tagLabel(
-                    appointment.etat,
-                  ),
-                ],
-              )
-            ],
+                    Text(
+                      getHour(appointment.heure),
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.redAccent,
+                      ),
+                    ),
+                    new Spacer(),
+                    tagLabel(
+                      appointment.etat,
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

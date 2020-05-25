@@ -19,6 +19,21 @@ class ApiPatient {
     }
   }
 
+  static Future<Patient> getPatientById(String id) async {
+    Patient patient;
+    final response = await http.get('${URLS.BASE_URL}/patient/' + id,
+        headers: {"Content-type": "application/json"});
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      for (Map i in data) {
+        patient = Patient.fromJson(i);
+      }
+      return patient;
+    } else {
+      return patient;
+    }
+  }
+
   static Future<String> addPatient(body) async {
     final response = await http.post('${URLS.BASE_URL}/patient/add',
         body: jsonEncode(body), headers: {"Content-type": "application/json"});

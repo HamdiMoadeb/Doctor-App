@@ -110,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                   SizedBox(
-                    height: ScreenUtil().setHeight(300),
+                    height: ScreenUtil().setHeight(250),
                   ),
                   FormLogin(
                     docPhone: docPhoneController,
