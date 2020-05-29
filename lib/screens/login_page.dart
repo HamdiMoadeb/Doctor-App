@@ -29,10 +29,13 @@ class _LoginPageState extends State<LoginPage> {
   ProgressDialog pr;
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-  Future<void> _saveTokenAndId(String token, String id) async {
+  Future<void> _saveTokenAndId(
+      String token, String id, String name, String spec) async {
     final SharedPreferences prefs = await _prefs;
     await prefs.setString('token', token);
     await prefs.setString('idDoc', id);
+    await prefs.setString('nameDoc', name);
+    await prefs.setString('specDoc', spec);
   }
 
   Widget radioButton(bool isSelected) => Container(
@@ -182,7 +185,9 @@ class _LoginPageState extends State<LoginPage> {
                                         .decode(success)['token']
                                         .toString();
                                     print(token);
-                                    _saveTokenAndId(token, doctor.id);
+
+                                    _saveTokenAndId(token, doctor.id,
+                                        doctor.fullname, doctor.speciality);
                                     pr.hide().whenComplete(() {
                                       Navigator.push(
                                         context,

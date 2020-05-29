@@ -78,7 +78,7 @@ class ItemCard extends StatelessWidget {
     } else if (tagId == 2) {
       label = 'RESCHEDULED';
       textColor = Colors.orange;
-      bgColor = Colors.yellowAccent.shade100;
+      bgColor = Colors.yellow.shade500;
     } else if (tagId == 3) {
       label = 'CANCELLED';
       textColor = Colors.red;
@@ -104,6 +104,7 @@ class ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double cwidth = MediaQuery.of(context).size.width * 0.7;
     Appointment appointment = listdvs[index];
     DateTime dateTime = DateTime.parse(appointment.date);
     String dateRDV = new DateFormat.yMd('fr_FR').format(dateTime).toString();
@@ -155,7 +156,7 @@ class ItemCard extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          width: 250.0,
+                          width: cwidth,
                           child: Text(
                             appointment.description,
                             maxLines: 1,
@@ -181,7 +182,7 @@ class ItemCard extends StatelessWidget {
                   height: 10.0,
                 ),
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Icon(
                       Icons.today,

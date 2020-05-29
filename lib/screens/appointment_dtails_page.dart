@@ -1,5 +1,6 @@
 import 'package:doctor_app/api_calls/api_appointment.dart';
 import 'package:doctor_app/api_calls/api_patient.dart';
+import 'package:doctor_app/screens/reschedule_appointment_page.dart';
 import 'package:flutter/material.dart';
 import 'package:doctor_app/models/appointment.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -89,7 +90,7 @@ class AppointmentDetailsState extends State<AppointmentDetails> {
     } else if (tagId == 2) {
       label = 'RESCHEDULED';
       textColor = Colors.orange;
-      bgColor = Colors.yellowAccent.shade100;
+      bgColor = Colors.yellow.shade500;
     } else if (tagId == 3) {
       label = 'CANCELLED';
       textColor = Colors.red;
@@ -138,7 +139,7 @@ class AppointmentDetailsState extends State<AppointmentDetails> {
     }
   }
 
-  _displayDialog(BuildContext context) async {
+  _displayDialogCancel(BuildContext context) async {
     return showDialog(
         context: context,
         builder: (context) {
@@ -170,6 +171,38 @@ class AppointmentDetailsState extends State<AppointmentDetails> {
         });
   }
 
+  _displayDialogValidate(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Finish Appointment'),
+            content: Text('Are you sure to validate this appointment ?'),
+            actions: <Widget>[
+              new FlatButton(
+                  child: const Text('NO'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+              new FlatButton(
+                  child: const Text('YES'),
+                  onPressed: () {
+                    ApiAppointment.validateAppointment(appointment.id)
+                        .then((onValue) {
+                      Navigator.pop(context);
+                      setState(() {
+                        etat = 4;
+                        visiblityReschdule = false;
+                        visiblityFinish = false;
+                        visiblityCancel = false;
+                      });
+                    });
+                  })
+            ],
+          );
+        });
+  }
+
   String email = '...';
   String phone = '...';
   int etat;
@@ -187,7 +220,7 @@ class AppointmentDetailsState extends State<AppointmentDetails> {
       visiblityFinish = true;
       visiblityCancel = true;
     } else if (etat == 2) {
-      visiblityReschdule = false;
+      visiblityReschdule = true;
       visiblityFinish = true;
       visiblityCancel = true;
     } else {
@@ -208,7 +241,7 @@ class AppointmentDetailsState extends State<AppointmentDetails> {
   Widget build(BuildContext context) {
     DateTime dateTime = DateTime.parse(appointment.date);
     String dateRDV = new DateFormat.yMd('fr_FR').format(dateTime).toString();
-    double c_width = MediaQuery.of(context).size.width * 0.8;
+    double cwidth = MediaQuery.of(context).size.width * 0.8;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -418,7 +451,7 @@ class AppointmentDetailsState extends State<AppointmentDetails> {
                       height: 3.0,
                     ),
                     Container(
-                      width: c_width,
+                      width: cwidth,
                       child: Text(
                         appointment.description,
                         textAlign: TextAlign.start,
@@ -541,7 +574,16 @@ class AppointmentDetailsState extends State<AppointmentDetails> {
                   visible: visiblityReschdule,
                   child: RaisedButton(
                     color: Colors.yellow.shade700,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RescheduleAppointment(
+                            appointment: appointment,
+                          ),
+                        ),
+                      );
+                    },
                     child: const Text(
                       'Reschdule',
                       style: TextStyle(fontSize: 20, color: Colors.white),
@@ -555,7 +597,7 @@ class AppointmentDetailsState extends State<AppointmentDetails> {
                   visible: visiblityCancel,
                   child: RaisedButton(
                     color: Colors.red,
-                    onPressed: () => _displayDialog(context),
+                    onPressed: () => _displayDialogCancel(context),
                     child: const Text(
                       'Cancel',
                       style: TextStyle(fontSize: 20, color: Colors.white),
@@ -569,7 +611,7 @@ class AppointmentDetailsState extends State<AppointmentDetails> {
                   visible: visiblityFinish,
                   child: RaisedButton(
                     color: Colors.green,
-                    onPressed: () {},
+                    onPressed: () => _displayDialogValidate(context),
                     child: const Text(
                       'Finish',
                       style: TextStyle(fontSize: 20, color: Colors.white),

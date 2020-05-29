@@ -7,6 +7,8 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:doctor_app/api_calls/api_appointment.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:doctor_app/models/patient.dart';
+import 'package:doctor_app/models/ChipData.dart';
+import 'package:doctor_app/models/Dayparting.dart';
 
 class AddAppointment extends StatefulWidget {
   AddAppointment({this.patient});
@@ -21,16 +23,21 @@ class _State extends State<AddAppointment> {
   _State({this.patient});
 
   final Patient patient;
-
   bool isSelected = false;
-  var data = ['Small', 'Medium', 'Large', 'XLarge'];
-  int _value = 1;
   bool status = false;
 
   ProgressDialog pr;
   DateTime selectedDate = DateTime.now();
   String patientId = "";
   var descController = TextEditingController();
+
+  callbackPatient(newPat) {
+    setState(() {
+      //birthdayController = newPat;
+      print('ID CALLBACK @@@@@ $newPat');
+      patientId = newPat;
+    });
+  }
 
   List<ChipData> chipsData = [
     //Matin
@@ -60,6 +67,27 @@ class _State extends State<AddAppointment> {
     ChipData('6:30 PM', false, true, 2),
     ChipData('7:00 PM', false, true, 2),
     ChipData('7:30 PM', false, true, 2),
+  ];
+
+  List<Dayparting> vehicles = [
+    new Dayparting(
+      'Matin  ',
+      '8 AM - 12 PM',
+      ['Vehicle no. 1', 'Vehicle no. 2', 'Vehicle no. 7', 'Vehicle no. 10'],
+      Icons.motorcycle,
+    ),
+    new Dayparting(
+      'Après Midi  ',
+      '12 PM - 4 PM',
+      ['Vehicle no. 3', 'Vehicle no. 4', 'Vehicle no. 6'],
+      Icons.directions_car,
+    ),
+    new Dayparting(
+      'Soir  ',
+      '4 PM - 8 PM',
+      ['Vehicle no. 3', 'Vehicle no. 4', 'Vehicle no. 6'],
+      Icons.directions_car,
+    ),
   ];
 
   getHoursByDate(String date) {
@@ -153,14 +181,6 @@ class _State extends State<AddAppointment> {
       },
       showCheckmark: false,
     );
-  }
-
-  callbackPatient(newPat) {
-    setState(() {
-      //birthdayController = newPat;
-      print('ID CALLBACK @@@@@ $newPat');
-      patientId = newPat;
-    });
   }
 
   @override
@@ -325,6 +345,7 @@ class _State extends State<AddAppointment> {
                           onTap: () async {
                             pr.show();
                             String createdby = await getDocId();
+
                             final body = {
                               "idPatient": patientId,
                               "createdBy": createdby,
@@ -377,57 +398,4 @@ class _State extends State<AddAppointment> {
       ),
     );
   }
-
-  _buildExpandableContent(Vehicle vehicle) {
-    List<Widget> columnContent = [];
-
-    for (String content in vehicle.contents)
-      columnContent.add(
-        Text(
-          content,
-          style: TextStyle(fontSize: 18.0),
-        ),
-      );
-
-    return columnContent;
-  }
 }
-
-class ChipData {
-  String time;
-  bool selected;
-  bool enabled;
-  int idx;
-
-  ChipData(this.time, this.selected, this.enabled, this.idx);
-}
-
-class Vehicle {
-  final String title;
-  final String time;
-  List<String> contents = [];
-  final IconData icon;
-
-  Vehicle(this.title, this.time, this.contents, this.icon);
-}
-
-List<Vehicle> vehicles = [
-  new Vehicle(
-    'Matin  ',
-    '8 AM - 12 PM',
-    ['Vehicle no. 1', 'Vehicle no. 2', 'Vehicle no. 7', 'Vehicle no. 10'],
-    Icons.motorcycle,
-  ),
-  new Vehicle(
-    'Après Midi  ',
-    '12 PM - 4 PM',
-    ['Vehicle no. 3', 'Vehicle no. 4', 'Vehicle no. 6'],
-    Icons.directions_car,
-  ),
-  new Vehicle(
-    'Soir  ',
-    '4 PM - 8 PM',
-    ['Vehicle no. 3', 'Vehicle no. 4', 'Vehicle no. 6'],
-    Icons.directions_car,
-  ),
-];
