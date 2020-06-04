@@ -1,7 +1,7 @@
 import 'package:doctor_app/api_calls/urls.dart';
 
-class Doctor {
-  Doctor(
+class Assistant {
+  Assistant(
     this.role,
     this.accountState,
     this.createdAt,
@@ -9,10 +9,9 @@ class Doctor {
     this.fullname,
     this.phone,
     this.email,
-    this.speciality,
-    this.address,
     this.password,
     this.image,
+    this.createdBy,
   );
 
   final String role;
@@ -22,12 +21,11 @@ class Doctor {
   final String fullname;
   final String phone;
   final String email;
-  final String speciality;
-  final String address;
   final String password;
   final String image;
+  final String createdBy;
 
-  Doctor.fromJson(Map<String, dynamic> json)
+  Assistant.fromJson(Map<String, dynamic> json)
       : image = URLS.BASE_URL + '/' + json['image'],
         role = json['role'],
         accountState = json['accountState'],
@@ -36,20 +34,18 @@ class Doctor {
         fullname = json['fullname'],
         phone = json['phone'],
         email = json['email'],
-        speciality = json['speciality'],
-        address = json['address'],
-        password = json['password'];
+        password = json['password'],
+        createdBy = json['createdBy'];
 
   Map<String, dynamic> toJson() => {
         'role': role,
         'accountState': accountState,
         'createdAt': createdAt,
-        'id': id,
+        '_id': id,
         'fullname': fullname,
         'phone': phone,
         'email': email,
-        'speciality': speciality,
-        'address': address,
         'password': password,
+        'createdBy': createdBy,
       };
 }

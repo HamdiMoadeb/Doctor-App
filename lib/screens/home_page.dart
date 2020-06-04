@@ -1,11 +1,13 @@
 import 'dart:ui';
-
+import 'package:doctor_app/screens/assistants_list_page.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'appointments_list_page.dart';
 import 'patients_list_page.dart';
 import 'add_appointment_page.dart';
 import 'add_patient_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'doctor_details_page.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -31,6 +33,7 @@ class _MyHomePageState extends State<HomePage> {
   String docId = '';
   String docName = '';
   String docSpeciality = '';
+  String docImage = '';
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +43,7 @@ class _MyHomePageState extends State<HomePage> {
         docId = prefs.getString('idDoc');
         docName = prefs.getString('nameDoc');
         docSpeciality = prefs.getString('specDoc');
+        docImage = prefs.getString('imageDoc');
       });
 
       return 'done';
@@ -78,8 +82,7 @@ class _MyHomePageState extends State<HomePage> {
                       children: <Widget>[
                         CircleAvatar(
                           radius: 40.0,
-                          backgroundImage: NetworkImage(
-                              'https://node-docapp.herokuapp.com/avatarBoy.png'),
+                          backgroundImage: NetworkImage(docImage),
                         ),
                         SizedBox(
                           height: 10.0,
@@ -91,7 +94,7 @@ class _MyHomePageState extends State<HomePage> {
                           children: <Widget>[
                             Container(
                               child: Text(
-                                docName,
+                                'Dr. $docName',
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: 22.0,
@@ -130,20 +133,80 @@ class _MyHomePageState extends State<HomePage> {
                         fit: BoxFit.cover)),
               ),
               ListTile(
+                leading: Icon(
+                  Icons.person,
+                  //Icons.check_box,
+                  color: Colors.blue,
+                  size: 25.0,
+                ),
                 title: Text('Profile'),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DoctorDetails(),
+                    ),
+                  );
+                },
               ),
               ListTile(
+                leading: Icon(
+                  Icons.people,
+                  //Icons.check_box,
+                  color: Colors.blue,
+                  size: 25.0,
+                ),
                 title: Text('Sous Admin'),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AssitancesList(),
+                    ),
+                  );
+                },
               ),
               ListTile(
+                leading: Icon(
+                  Icons.notifications_active,
+                  //Icons.check_box,
+                  color: Colors.blue,
+                  size: 25.0,
+                ),
                 title: Text('Notification'),
                 onTap: () {},
               ),
               ListTile(
+                leading: Icon(
+                  Icons.monetization_on,
+                  //Icons.check_box,
+                  color: Colors.blue,
+                  size: 25.0,
+                ),
                 title: Text('Wallet'),
                 onTap: () {},
+              ),
+              Divider(
+                height: 1.0,
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.exit_to_app,
+                  //Icons.check_box,
+                  color: Colors.blue,
+                  size: 25.0,
+                ),
+                title: Text('Logout'),
+                onTap: () {
+                  if (Navigator.canPop(context)) {
+                    var count = 0;
+                    Navigator.popUntil(context, (route) {
+                      return count++ == 2;
+                    });
+                  } else {
+                    SystemNavigator.pop();
+                  }
+                },
               ),
             ],
           ),

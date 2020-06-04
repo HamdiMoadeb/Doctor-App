@@ -1,28 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class FormRegister extends StatelessWidget {
-  FormRegister({
+class FormAddAssistance extends StatefulWidget {
+  FormAddAssistance({
+    Key key,
     @required this.fullname,
     @required this.phone,
     @required this.email,
-    @required this.speciality,
-    @required this.address,
-    @required this.password,
+  }) : super(key: key);
+
+  final TextEditingController fullname;
+  final TextEditingController phone;
+  final TextEditingController email;
+
+  @override
+  FormAddAssistanceState createState() => FormAddAssistanceState(
+        fullname: fullname,
+        phone: phone,
+        email: email,
+      );
+}
+
+class FormAddAssistanceState extends State<FormAddAssistance> {
+  FormAddAssistanceState({
+    @required this.fullname,
+    @required this.phone,
+    @required this.email,
   });
 
   final TextEditingController fullname;
   final TextEditingController phone;
   final TextEditingController email;
-  final TextEditingController speciality;
-  final TextEditingController address;
-  final TextEditingController password;
+  String labelText = '';
 
   @override
   Widget build(BuildContext context) {
+    final TextStyle valueStyle = Theme.of(context).textTheme.body1;
+
     return Container(
       width: double.infinity,
-      height: ScreenUtil().setHeight(1100),
+      height: ScreenUtil().setHeight(700),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8.0),
@@ -44,7 +61,7 @@ class FormRegister extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'Register',
+              'Ajouter Assistante',
               style: TextStyle(
                 fontFamily: 'Poppins-Bold',
                 fontSize: ScreenUtil().setSp(45),
@@ -66,28 +83,7 @@ class FormRegister extends StatelessWidget {
             TextField(
               controller: fullname,
               decoration: InputDecoration(
-                hintText: 'fullname',
-                hintStyle: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12.0,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: ScreenUtil().setHeight(30),
-            ),
-            Text(
-              'Phone',
-              style: TextStyle(
-                fontFamily: 'Poppins-Medium',
-                fontSize: ScreenUtil().setSp(26),
-                letterSpacing: .6,
-              ),
-            ),
-            TextField(
-              controller: phone,
-              decoration: InputDecoration(
-                hintText: 'phone',
+                hintText: 'firstname',
                 hintStyle: TextStyle(
                   color: Colors.grey,
                   fontSize: 12.0,
@@ -119,7 +115,7 @@ class FormRegister extends StatelessWidget {
               height: ScreenUtil().setHeight(30),
             ),
             Text(
-              'Specialty',
+              'Phone',
               style: TextStyle(
                 fontFamily: 'Poppins-Medium',
                 fontSize: ScreenUtil().setSp(26),
@@ -127,9 +123,9 @@ class FormRegister extends StatelessWidget {
               ),
             ),
             TextField(
-              controller: speciality,
+              controller: phone,
               decoration: InputDecoration(
-                hintText: 'specialty',
+                hintText: 'phone',
                 hintStyle: TextStyle(
                   color: Colors.grey,
                   fontSize: 12.0,
@@ -138,46 +134,6 @@ class FormRegister extends StatelessWidget {
             ),
             SizedBox(
               height: ScreenUtil().setHeight(30),
-            ),
-            Text(
-              'Address',
-              style: TextStyle(
-                fontFamily: 'Poppins-Medium',
-                fontSize: ScreenUtil().setSp(26),
-                letterSpacing: .6,
-              ),
-            ),
-            TextField(
-              controller: address,
-              decoration: InputDecoration(
-                hintText: 'address',
-                hintStyle: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12.0,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: ScreenUtil().setHeight(30),
-            ),
-            Text(
-              'Password',
-              style: TextStyle(
-                fontFamily: 'Poppins-Medium',
-                fontSize: ScreenUtil().setSp(26),
-                letterSpacing: .6,
-              ),
-            ),
-            TextField(
-              controller: password,
-              obscureText: true,
-              decoration: InputDecoration(
-                hintText: 'password',
-                hintStyle: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12.0,
-                ),
-              ),
             ),
             SizedBox(
               height: ScreenUtil().setHeight(35),

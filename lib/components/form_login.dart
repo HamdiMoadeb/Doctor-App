@@ -91,6 +91,7 @@ class FormLogin extends StatelessWidget {
             ),
             TextField(
               controller: docPhone,
+              keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 hintText: 'phone',
                 hintStyle: TextStyle(

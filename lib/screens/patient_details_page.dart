@@ -218,12 +218,7 @@ class PatientDetailsState extends State<PatientDetails> {
                           OMIcons.indeterminateCheckBox,
                           color: Colors.blue,
                           size: 25.0,
-                        )
-                        /*Icon(
-                          Icons.indeterminate_check_box,
-                          color: Colors.blue,
-                        ),*/
-                        ,
+                        ),
                         title: Text(
                           'Upcoming visits',
                           style: TextStyle(

@@ -30,12 +30,23 @@ class _LoginPageState extends State<LoginPage> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   Future<void> _saveTokenAndId(
-      String token, String id, String name, String spec) async {
+      String token,
+      String id,
+      String name,
+      String spec,
+      String phone,
+      String email,
+      String adress,
+      String image) async {
     final SharedPreferences prefs = await _prefs;
     await prefs.setString('token', token);
     await prefs.setString('idDoc', id);
     await prefs.setString('nameDoc', name);
     await prefs.setString('specDoc', spec);
+    await prefs.setString('phoneDoc', phone);
+    await prefs.setString('emailDoc', email);
+    await prefs.setString('adreslDoc', adress);
+    await prefs.setString('imageDoc', image);
   }
 
   Widget radioButton(bool isSelected) => Container(
@@ -167,7 +178,8 @@ class _LoginPageState extends State<LoginPage> {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () {
-                                FocusScope.of(context).unfocus();
+                                FocusScope.of(context)
+                                    .requestFocus(FocusNode());
                                 pr.show();
 
                                 final body = {
@@ -186,15 +198,26 @@ class _LoginPageState extends State<LoginPage> {
                                         .toString();
                                     print(token);
 
-                                    _saveTokenAndId(token, doctor.id,
-                                        doctor.fullname, doctor.speciality);
-                                    pr.hide().whenComplete(() {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => HomePage(),
-                                        ),
-                                      );
+                                    _saveTokenAndId(
+                                            token,
+                                            doctor.id,
+                                            doctor.fullname,
+                                            doctor.speciality,
+                                            doctor.phone,
+                                            doctor.email,
+                                            doctor.address,
+                                            doctor.image)
+                                        .then((onValue) {
+                                      docPhoneController.text = '';
+                                      docPassController.text = '';
+                                      pr.hide().whenComplete(() {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => HomePage(),
+                                          ),
+                                        );
+                                      });
                                     });
                                   } else {
                                     String message = json

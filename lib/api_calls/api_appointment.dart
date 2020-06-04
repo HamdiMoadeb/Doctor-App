@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:doctor_app/models/appointment.dart';
-import 'package:doctor_app/models/patient.dart';
 import 'package:http/http.dart' as http;
 import 'package:doctor_app/api_calls/urls.dart';
 
