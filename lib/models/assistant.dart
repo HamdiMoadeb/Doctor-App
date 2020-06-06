@@ -26,17 +26,17 @@ class Assistant {
   final String createdBy;
 
   Assistant.fromJson(Map<String, dynamic> json)
-      : image = URLS.BASE_URL + '/' + json['image'],
-        role = json['role'],
-        accountState = json['accountState'],
-        createdAt = json['createdAt'],
-        id = json['_id'],
-        fullname = json['fullname'],
-        phone = json['phone'],
-        email = json['email'],
-        password = json['password'],
-        createdBy = json['createdBy'];
-
+      : image = URLS.BASE_URL + '/' + json['image'].toString(),
+        role = json['role'].toString(),
+        accountState = bool.fromEnvironment(json['accountState'].toString()),
+        createdAt = json['createdAt'].toString(),
+        id = json['_id'].toString(),
+        fullname = json['fullname'].toString(),
+        phone = json['phone'].toString(),
+        email = json['email'].toString(),
+        password = json['password'].toString(),
+        createdBy = json['createdBy'].toString();
+/*
   Map<String, dynamic> toJson() => {
         'role': role,
         'accountState': accountState,
@@ -47,5 +47,5 @@ class Assistant {
         'email': email,
         'password': password,
         'createdBy': createdBy,
-      };
+      };*/
 }
