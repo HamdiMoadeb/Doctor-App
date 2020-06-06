@@ -16,14 +16,14 @@ class Patient {
       this.profession, this.gender, this.phone, this.email, this.photourl);
 
   Patient.fromJson(Map<String, dynamic> json)
-      : id = json['_id'],
-        firstname = json['firstname'],
-        lastname = json['lastname'],
-        birthday = json['birthday'],
-        address = json['address'],
-        profession = json['profession'],
-        gender = json['gender'],
-        phone = json['phone'],
-        email = json['email'],
-        photourl = URLS.BASE_URL + '/' + json['image'];
+      : id = json['_id'].toString(),
+        firstname = json['firstname'].toString(),
+        lastname = json['lastname'].toString(),
+        birthday = json['birthday'].toString(),
+        address = json['address'].toString(),
+        profession = json['profession'].toString(),
+        gender = json['gender'].toString(),
+        phone = json['phone'].toString(),
+        email = json['email'].toString(),
+        photourl = URLS.BASE_URL + '/' + json['image'].toString();
 }
