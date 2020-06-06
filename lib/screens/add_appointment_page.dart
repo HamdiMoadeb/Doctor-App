@@ -90,7 +90,7 @@ class _State extends State<AddAppointment> {
     ),
   ];
 
-  getHoursByDate(String date) {
+  void getHoursByDate(String date) {
     final body = {
       "date": date.toString(),
     };
@@ -126,7 +126,7 @@ class _State extends State<AddAppointment> {
     return selected;
   }
 
-  setChipNotSelected(int index) {
+  void setChipNotSelected(int index) {
     for (var i = 0; i < chipsData.length; i++) {
       if (i != index) {
         chipsData[i].selected = false;
@@ -134,7 +134,7 @@ class _State extends State<AddAppointment> {
     }
   }
 
-  setAllChipsEnabled() {
+  void setAllChipsEnabled() {
     for (var i = 0; i < chipsData.length; i++) {
       chipsData[i].enabled = true;
     }

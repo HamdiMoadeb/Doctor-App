@@ -26,14 +26,14 @@ class Appointment {
   String createdBy;
 
   Appointment.fromJson(Map<String, dynamic> json)
-      : etat = json['etat'],
-        createdAt = json['createdAt'],
-        id = json['_id'],
-        description = json['description'],
-        date = json['date'],
-        heure = json['heure'],
-        createdBy = json['createdBy'],
-        idPatient = json['idPatient'],
-        namePatient = json['fullnamePatient'],
-        imagePatient = URLS.BASE_URL + '/' + json['imagePatient'];
+      : etat = int.parse(json['etat'].toString()),
+        createdAt = json['createdAt'].toString(),
+        id = json['_id'].toString(),
+        description = json['description'].toString(),
+        date = json['date'].toString(),
+        heure = int.parse(json['heure'].toString()),
+        createdBy = json['createdBy'].toString(),
+        idPatient = json['idPatient'].toString(),
+        namePatient = json['fullnamePatient'].toString(),
+        imagePatient = URLS.BASE_URL + '/' + json['imagePatient'].toString();
 }
