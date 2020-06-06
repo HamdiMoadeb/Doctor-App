@@ -31,7 +31,7 @@ class _State extends State<AddAppointment> {
   String patientId = "";
   var descController = TextEditingController();
 
-  void callbackPatient(String newPat) {
+  callbackPatient(newPat) {
     setState(() {
       //birthdayController = newPat;
       print('ID CALLBACK @@@@@ $newPat');
@@ -90,14 +90,13 @@ class _State extends State<AddAppointment> {
     ),
   ];
 
-  void getHoursByDate(String date) {
+  getHoursByDate(String date) {
     final body = {
       "date": date.toString(),
     };
-
     ApiAppointment.getHoursByDate(body).then((success) {
-      List<int> list = json.decode(success) as List<int>;
-      for (int i in list) {
+      List<dynamic> list = json.decode(success);
+      for (dynamic i in list) {
         print('getHoursByDate : $i');
         setState(() {
           chipsData[i].enabled = false;
@@ -127,7 +126,7 @@ class _State extends State<AddAppointment> {
     return selected;
   }
 
-  void setChipNotSelected(int index) {
+  setChipNotSelected(int index) {
     for (var i = 0; i < chipsData.length; i++) {
       if (i != index) {
         chipsData[i].selected = false;
@@ -135,7 +134,7 @@ class _State extends State<AddAppointment> {
     }
   }
 
-  void setAllChipsEnabled() {
+  setAllChipsEnabled() {
     for (var i = 0; i < chipsData.length; i++) {
       chipsData[i].enabled = true;
     }
