@@ -28,18 +28,18 @@ class Doctor {
   final String image;
 
   Doctor.fromJson(Map<String, dynamic> json)
-      : image = URLS.BASE_URL + '/' + json['image'],
-        role = json['role'],
-        accountState = json['accountState'],
-        createdAt = json['createdAt'],
-        id = json['_id'],
-        fullname = json['fullname'],
-        phone = json['phone'],
-        email = json['email'],
-        speciality = json['speciality'],
-        address = json['address'],
-        password = json['password'];
-
+      : image = URLS.BASE_URL + '/' + json['image'].toString(),
+        role = json['role'].toString(),
+        accountState = bool.fromEnvironment(json['accountState'].toString()),
+        createdAt = json['createdAt'].toString(),
+        id = json['_id'].toString(),
+        fullname = json['fullname'].toString(),
+        phone = json['phone'].toString(),
+        email = json['email'].toString(),
+        speciality = json['speciality'].toString(),
+        address = json['address'].toString(),
+        password = json['password'].toString();
+/*
   Map<String, dynamic> toJson() => {
         'role': role,
         'accountState': accountState,
@@ -51,5 +51,5 @@ class Doctor {
         'speciality': speciality,
         'address': address,
         'password': password,
-      };
+      };*/
 }
