@@ -1,16 +1,15 @@
 import 'package:doctor_app/models/assistant.dart';
-import 'package:doctor_app/screens/add_assitance_page.dart';
 import 'package:flutter/material.dart';
 import 'package:doctor_app/components/item_assitance.dart';
 import 'package:doctor_app/api_calls/api_assistant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AssitancesList extends StatefulWidget {
+class NotificationsList extends StatefulWidget {
   @override
-  AssitancesListState createState() => new AssitancesListState();
+  NotificationsListState createState() => new NotificationsListState();
 }
 
-class AssitancesListState extends State<AssitancesList> {
+class NotificationsListState extends State<NotificationsList> {
   List<Assistant> assistants = List<Assistant>();
 
   String idDoc = '';
@@ -40,21 +39,7 @@ class AssitancesListState extends State<AssitancesList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Assistantes'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddAssistance(),
-            ),
-          );
-        },
-        child: Icon(
-          Icons.person_add,
-          color: Colors.white,
-        ),
+        title: Text('Notifications'),
       ),
       body: FutureBuilder(
         future: ApiAssistant.getAllAssistantsByDoc(idDoc),

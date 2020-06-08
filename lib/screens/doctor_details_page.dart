@@ -1,3 +1,4 @@
+import 'package:doctor_app/api_calls/api_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +17,27 @@ class DoctorDetailsState extends State<DoctorDetails> {
   String docAdress = '';
   String docImage = '';
   TextEditingController _textFieldController = TextEditingController();
+
+  Future<String> setDocInfo(String value, String type) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (type == 'phone') {
+      await prefs.setString('phoneDoc', value);
+      setState(() {
+        docPhone = value;
+      });
+    } else if (type == 'email') {
+      await prefs.setString('emailDoc', value);
+      setState(() {
+        docEmail = value;
+      });
+    } else if (type == 'address') {
+      await prefs.setString('adreslDoc', value);
+      setState(() {
+        docAdress = value;
+      });
+    }
+  }
 
   displayDialog(BuildContext context, String type, String oldvalue) async {
     _textFieldController.text = oldvalue;
@@ -38,11 +60,12 @@ class DoctorDetailsState extends State<DoctorDetails> {
                   child: const Text('EDIT'),
                   onPressed: () {
                     final body = {
-                      "email": _textFieldController.text.toString(),
+                      type: _textFieldController.text.toString(),
                     };
-                    /*ApiAuth.forgot_password(body).then((success) {
+                    ApiAuth.editProfileDoc(body, docId).then((success) {
+                      setDocInfo(_textFieldController.text.toString(), type);
                       Navigator.pop(context);
-                    });*/
+                    });
                   })
             ],
           );
@@ -188,7 +211,7 @@ class DoctorDetailsState extends State<DoctorDetails> {
                           size: 25.0,
                         ),
                       ),
-                      ListTile(
+                      /* ListTile(
                         onTap: () => displayDialog(context, 'birthday', ''),
                         leading: Icon(
                           OMIcons.calendarToday,
@@ -207,7 +230,7 @@ class DoctorDetailsState extends State<DoctorDetails> {
                           color: Colors.grey,
                           size: 25.0,
                         ),
-                      ),
+                      ),*/
                       ListTile(
                         onTap: () => displayDialog(context, 'password', ''),
                         leading: Icon(

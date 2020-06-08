@@ -342,6 +342,7 @@ class RescheduleAppointmentState extends State<RescheduleAppointment> {
     DateTime dateTime = DateTime.parse(appointment.date);
     String dateRDV = new DateFormat.yMd('fr_FR').format(dateTime).toString();
     double cWidth = MediaQuery.of(context).size.width * 0.8;
+    double cWidthName = MediaQuery.of(context).size.width * 0.6;
 
     pr = new ProgressDialog(context, isDismissible: false);
     pr.style(
@@ -394,7 +395,7 @@ class RescheduleAppointmentState extends State<RescheduleAppointment> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Container(
-                        width: 250.0,
+                        width: cWidthName,
                         child: Text(
                           appointment.namePatient,
                           maxLines: 1,
@@ -408,7 +409,7 @@ class RescheduleAppointmentState extends State<RescheduleAppointment> {
                         ),
                       ),
                       Container(
-                        width: 250.0,
+                        width: cWidthName,
                         child: Text(
                           email,
                           maxLines: 1,

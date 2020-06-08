@@ -1,17 +1,37 @@
 import 'package:doctor_app/models/assistant.dart';
 import 'package:flutter/material.dart';
-import 'package:doctor_app/screens/patient_details_page.dart';
 import 'package:doctor_app/api_calls/api_assistant.dart';
 
-class ItemCardAssitance extends StatelessWidget {
+class ItemCardAssitance extends StatefulWidget {
   ItemCardAssitance(
-      {@required this.context, @required this.index, @required this.listdvs});
+      {@required this.context,
+      @required this.index,
+      @required this.listdvs,
+      @required this.callback});
 
   final BuildContext context;
   final int index;
   final List<Assistant> listdvs;
+  Function() callback;
 
-  String state = '';
+  @override
+  _MyStatefulWidgetState createState() => _MyStatefulWidgetState(
+      context: context, index: index, listdvs: listdvs, callback: callback);
+}
+
+class _MyStatefulWidgetState extends State<ItemCardAssitance> {
+  _MyStatefulWidgetState(
+      {@required this.context,
+      @required this.index,
+      @required this.listdvs,
+      @required this.callback});
+
+  final BuildContext context;
+  final int index;
+  final List<Assistant> listdvs;
+  Function() callback;
+
+  String stateT = '';
 
   displayDialogActivation(BuildContext context, bool state, String id) async {
     String activation = '';
@@ -37,6 +57,7 @@ class ItemCardAssitance extends StatelessWidget {
                   onPressed: () {
                     ApiAssistant.activateAssistant(id).then((onValue) {
                       Navigator.pop(context);
+                      widget.callback();
                     });
                   })
             ],
@@ -48,9 +69,9 @@ class ItemCardAssitance extends StatelessWidget {
   Widget build(BuildContext context) {
     Assistant assistant = listdvs[index];
     if (listdvs[index].accountState) {
-      state = 'Active';
+      stateT = 'Active';
     } else {
-      state = 'Inactive';
+      stateT = 'Inactive';
     }
     return Container(
       child: Card(
@@ -119,7 +140,7 @@ class ItemCardAssitance extends StatelessWidget {
                     ),
                     Spacer(),
                     Text(
-                      state,
+                      stateT,
                       style: TextStyle(
                         fontSize: 14.0,
                         color: Colors.redAccent,

@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:doctor_app/screens/assistants_list_page.dart';
+import 'package:doctor_app/screens/notifications_page.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'appointments_list_page.dart';
@@ -59,12 +60,62 @@ class _MyHomePageState extends State<HomePage> {
         appBar: AppBar(
           title: Text(setTitle()),
           actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.search,
-                color: Colors.white,
+            Container(
+              padding: const EdgeInsets.only(top: 6.0),
+              child: IconButton(
+                icon: Icon(
+                  Icons.search,
+                  color: Colors.white,
+                  size: 28.0,
+                ),
+                onPressed: null,
               ),
-              onPressed: null,
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NotificationsList(),
+                  ),
+                );
+              },
+              child: Container(
+                width: 55.0,
+                padding: const EdgeInsets.only(right: 10.0, top: 6.0),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.notifications,
+                          size: 28.0,
+                        ),
+                        //Text(text, overflow: TextOverflow.ellipsis),
+                      ],
+                    ),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: Colors.red),
+                        alignment: Alignment.center,
+                        child: Text(
+                          '22',
+                          style: TextStyle(
+                            fontSize: 12.0,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -129,7 +180,7 @@ class _MyHomePageState extends State<HomePage> {
                     image: DecorationImage(
                         colorFilter: ColorFilter.mode(
                             Colors.black.withOpacity(0.6), BlendMode.dstATop),
-                        image: AssetImage("images/health.jpg"),
+                        image: AssetImage('images/health.jpg'),
                         fit: BoxFit.cover)),
               ),
               ListTile(
@@ -156,7 +207,7 @@ class _MyHomePageState extends State<HomePage> {
                   color: Colors.blue,
                   size: 25.0,
                 ),
-                title: Text('Sous Admin'),
+                title: Text('Assistants'),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -167,14 +218,35 @@ class _MyHomePageState extends State<HomePage> {
                 },
               ),
               ListTile(
-                leading: Icon(
+                leading: Stack(children: <Widget>[
+                  new Icon(
+                    Icons.notifications,
+                    color: Colors.blue,
+                    size: 25.0,
+                  ),
+                  new Positioned(
+                    // draw a red marble
+                    top: 0.0,
+                    right: 0.0,
+                    child: new Icon(Icons.brightness_1,
+                        size: 12.0, color: Colors.redAccent),
+                  )
+                ]),
+                /*Icon(
                   Icons.notifications_active,
                   //Icons.check_box,
                   color: Colors.blue,
                   size: 25.0,
-                ),
+                ),*/
                 title: Text('Notification'),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NotificationsList(),
+                    ),
+                  );
+                },
               ),
               ListTile(
                 leading: Icon(

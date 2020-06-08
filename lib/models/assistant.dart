@@ -28,7 +28,7 @@ class Assistant {
   Assistant.fromJson(Map<String, dynamic> json)
       : image = URLS.BASE_URL + '/' + json['image'].toString(),
         role = json['role'].toString(),
-        accountState = bool.fromEnvironment(json['accountState'].toString()),
+        accountState = json['accountState'],
         createdAt = json['createdAt'].toString(),
         id = json['_id'].toString(),
         fullname = json['fullname'].toString(),

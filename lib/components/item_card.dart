@@ -104,7 +104,7 @@ class ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double cwidth = MediaQuery.of(context).size.width * 0.7;
+    double cwidth = MediaQuery.of(context).size.width * 0.6;
     Appointment appointment = listdvs[index];
     DateTime dateTime = DateTime.parse(appointment.date);
     String dateRDV = new DateFormat.yMd('fr_FR').format(dateTime).toString();
@@ -127,7 +127,7 @@ class ItemCard extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Row(
-                  mainAxisSize: MainAxisSize.max,
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     CircleAvatar(
                       radius: 25.0,
@@ -142,7 +142,7 @@ class ItemCard extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Container(
-                          width: 250.0,
+                          width: cwidth,
                           child: Text(
                             appointment.namePatient,
                             maxLines: 1,
