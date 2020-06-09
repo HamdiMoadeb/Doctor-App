@@ -38,7 +38,7 @@ class AppointmentsListState extends State<AppointmentsList> {
               final listRDVs = snapshot.data;
               if (snapshot.connectionState == ConnectionState.done) {
                 return ListView.builder(
-                  padding: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.all(5.0),
                   itemBuilder: (BuildContext context, int index) => ItemCard(
                     context: context,
                     index: index,

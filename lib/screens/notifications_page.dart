@@ -1,7 +1,7 @@
-import 'package:doctor_app/models/assistant.dart';
+import 'package:doctor_app/components/item_notification.dart';
+import 'package:doctor_app/models/appointment.dart';
 import 'package:flutter/material.dart';
-import 'package:doctor_app/components/item_assitance.dart';
-import 'package:doctor_app/api_calls/api_assistant.dart';
+import 'package:doctor_app/api_calls/api_appointment.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationsList extends StatefulWidget {
@@ -10,9 +10,10 @@ class NotificationsList extends StatefulWidget {
 }
 
 class NotificationsListState extends State<NotificationsList> {
-  List<Assistant> assistants = List<Assistant>();
+  List<Appointment> assistants = List<Appointment>();
 
   String idDoc = '';
+  DateTime selectedDate = DateTime.now();
 
   callback() {
     setState(() {});
@@ -42,18 +43,19 @@ class NotificationsListState extends State<NotificationsList> {
         title: Text('Notifications'),
       ),
       body: FutureBuilder(
-        future: ApiAssistant.getAllAssistantsByDoc(idDoc),
+        future: ApiAppointment.getAllAppointmentsByDay({
+          "date": selectedDate.toString(),
+        }),
         builder: (context, snapshot) {
           assistants = snapshot.data;
           if (snapshot.connectionState == ConnectionState.done) {
             return ListView.builder(
               padding: EdgeInsets.all(10.0),
               itemBuilder: (BuildContext context, int index) =>
-                  ItemCardAssitance(
+                  ItemNotification(
                 context: context,
                 index: index,
                 listdvs: assistants,
-                callback: callback,
               ),
               itemCount: assistants.length,
             );

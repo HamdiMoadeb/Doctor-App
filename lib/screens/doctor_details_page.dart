@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'package:doctor_app/api_calls/api_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:dio/dio.dart';
 
 class DoctorDetails extends StatefulWidget {
   @override
@@ -17,6 +20,8 @@ class DoctorDetailsState extends State<DoctorDetails> {
   String docAdress = '';
   String docImage = '';
   TextEditingController _textFieldController = TextEditingController();
+  final picker = ImagePicker();
+  File _image;
 
   Future<String> setDocInfo(String value, String type) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -37,6 +42,50 @@ class DoctorDetailsState extends State<DoctorDetails> {
         docAdress = value;
       });
     }
+  }
+
+  void _settingModalBottomSheet(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            child: new Wrap(children: <Widget>[
+              new ListTile(
+                leading: new Icon(Icons.camera_alt),
+                title: new Text('Camera'),
+                onTap: () {
+                  Navigator.pop(context);
+                  getImage(ImageSource.camera);
+                },
+              ),
+              new ListTile(
+                  leading: new Icon(Icons.photo_album),
+                  title: new Text('Gallery'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    getImage(ImageSource.gallery);
+                  }),
+            ]),
+          );
+        });
+  }
+
+  Future getImage(ImageSource source) async {
+    final pickedFile = await picker.getImage(
+      source: source,
+      imageQuality: 50,
+    );
+
+    FormData formdata = new FormData.fromMap({
+      "file": await MultipartFile.fromFile(pickedFile.path,
+          filename: '$docName.jpg')
+    });
+    //ApiAuth.uploadPhoto(formdata);
+    //SharedPreferences prefs = await SharedPreferences.getInstance();
+    //prefs.setString('imageDoc', '$docName.jpg');
+    setState(() {
+      _image = File(pickedFile.path);
+    });
   }
 
   displayDialog(BuildContext context, String type, String oldvalue) async {
@@ -104,12 +153,17 @@ class DoctorDetailsState extends State<DoctorDetails> {
                   height: 15.0,
                 ),
                 Center(
-                  child: CircleAvatar(
-                    radius: 52.0,
-                    backgroundColor: Colors.blue,
+                  child: InkWell(
+                    onTap: () => _settingModalBottomSheet(context),
                     child: CircleAvatar(
-                      radius: 50.0,
-                      backgroundImage: NetworkImage(docImage),
+                      radius: 52.0,
+                      backgroundColor: Colors.blue,
+                      child: CircleAvatar(
+                        radius: 50.0,
+                        backgroundImage: _image == null
+                            ? NetworkImage(docImage)
+                            : FileImage(_image),
+                      ),
                     ),
                   ),
                 ),

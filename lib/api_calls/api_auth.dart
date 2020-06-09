@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:doctor_app/api_calls/urls.dart';
+import 'package:dio/dio.dart';
 
 class ApiAuth {
   static Future<String> login(body) async {
@@ -25,6 +26,21 @@ class ApiAuth {
       print(response.body);
       return response.body.toString();
     }
+  }
+
+  static Future<String> uploadPhoto(formdata) async {
+    Dio dio = new Dio();
+    dio
+        .post('${URLS.BASE_URL}',
+            data: formdata,
+            options: Options(method: 'POST', responseType: ResponseType.json))
+        .then((response) {
+      print(response);
+      return response;
+    }).catchError((error) {
+      print(error);
+      return error;
+    });
   }
 
   static Future<int> editProfileDoc(body, id) async {
