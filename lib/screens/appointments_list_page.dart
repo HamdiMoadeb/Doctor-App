@@ -4,15 +4,25 @@ import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:doctor_app/api_calls/api_appointment.dart';
 
 class AppointmentsList extends StatefulWidget {
+  AppointmentsList({this.selectedDate});
+
+  final DateTime selectedDate;
+
   @override
-  AppointmentsListState createState() => new AppointmentsListState();
+  AppointmentsListState createState() =>
+      new AppointmentsListState(selectedDate: selectedDate);
 }
 
 class AppointmentsListState extends State<AppointmentsList> {
-  //final List<Appointment> listRDVs = [];
+  AppointmentsListState({this.selectedDate});
 
+  DateTime selectedDate;
   DateTime datePicked;
-  DateTime selectedDate = DateTime.now();
+  //DateTime selectedDate = DateTime.now();
+
+  callbackDate() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {

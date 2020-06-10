@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:doctor_app/screens/assistants_list_page.dart';
 import 'package:doctor_app/screens/notifications_page.dart';
+import 'package:doctor_app/screens/wallet_page.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'appointments_list_page.dart';
@@ -19,11 +20,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<HomePage> {
-  int selectedIndex = 0;
+  static int selectedIndex = 0;
   IconData iconData = Icons.library_add;
+  static DateTime selectedDate = DateTime.now();
+  ValueChanged<DateTime> selectDate;
 
-  final List<Widget> _children = [
-    AppointmentsList(),
+  static final List<Widget> _children = [
+    AppointmentsList(selectedDate: selectedDate),
     PatientsList(),
   ];
 
@@ -35,6 +38,20 @@ class _MyHomePageState extends State<HomePage> {
   String docName = '';
   String docSpeciality = '';
   String docImage = '';
+  Widget widgetSelected = _children[selectedIndex];
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(1970, 8),
+        lastDate: DateTime(2100, 8));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+        print(selectedDate);
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +81,11 @@ class _MyHomePageState extends State<HomePage> {
               padding: const EdgeInsets.only(top: 6.0),
               child: IconButton(
                 icon: Icon(
-                  Icons.search,
+                  Icons.today,
                   color: Colors.white,
-                  size: 28.0,
+                  size: 25.0,
                 ),
-                onPressed: null,
+                onPressed: () => _selectDate(context),
               ),
             ),
             InkWell(
@@ -256,7 +273,14 @@ class _MyHomePageState extends State<HomePage> {
                   size: 25.0,
                 ),
                 title: Text('Wallet'),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WalletPage(),
+                    ),
+                  );
+                },
               ),
               Divider(
                 height: 1.0,

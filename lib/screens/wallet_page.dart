@@ -1,15 +1,17 @@
-import 'package:doctor_app/api_calls/api_appointment.dart';
 import 'package:doctor_app/components/item_notification.dart';
+import 'package:doctor_app/components/item_wallet.dart';
 import 'package:doctor_app/models/appointment.dart';
+import 'package:doctor_app/screens/add_wallet_page.dart';
 import 'package:flutter/material.dart';
+import 'package:doctor_app/api_calls/api_appointment.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class NotificationsList extends StatefulWidget {
+class WalletPage extends StatefulWidget {
   @override
-  NotificationsListState createState() => new NotificationsListState();
+  WalletPageState createState() => new WalletPageState();
 }
 
-class NotificationsListState extends State<NotificationsList> {
+class WalletPageState extends State<WalletPage> {
   List<Appointment> assistants = List<Appointment>();
 
   String idDoc = '';
@@ -40,7 +42,21 @@ class NotificationsListState extends State<NotificationsList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications'),
+        title: Text('Wallet'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddWallet(),
+            ),
+          );
+        },
+        child: Icon(
+          Icons.attach_money,
+          color: Colors.white,
+        ),
       ),
       body: FutureBuilder(
         future: ApiAppointment.getAllAppointmentsByDay({
@@ -51,8 +67,7 @@ class NotificationsListState extends State<NotificationsList> {
           if (snapshot.connectionState == ConnectionState.done) {
             return ListView.builder(
               padding: EdgeInsets.all(10.0),
-              itemBuilder: (BuildContext context, int index) =>
-                  ItemNotification(
+              itemBuilder: (BuildContext context, int index) => ItemWallet(
                 context: context,
                 index: index,
                 listdvs: assistants,
