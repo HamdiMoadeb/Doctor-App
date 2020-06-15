@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:doctor_app/models/appointment.dart';
+import 'package:doctor_app/models/notification.dart';
 import 'package:intl/intl.dart';
 import 'package:doctor_app/screens/notification_details_page.dart';
 
@@ -12,7 +12,7 @@ class ItemNotification extends StatelessWidget {
 
   final BuildContext context;
   final int index;
-  final List<Appointment> listdvs;
+  final List<NotificationR> listdvs;
 
   String getHour(int index) {
     switch (index) {
@@ -105,8 +105,8 @@ class ItemNotification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double cwidth = MediaQuery.of(context).size.width * 0.6;
-    Appointment appointment = listdvs[index];
-    DateTime dateTime = DateTime.parse(appointment.date);
+    NotificationR notification = listdvs[index];
+    DateTime dateTime = DateTime.parse(notification.date);
     String dateRDV = new DateFormat.yMd('fr_FR').format(dateTime).toString();
     print(dateRDV);
     return Container(
@@ -116,7 +116,7 @@ class ItemNotification extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => NotificationDetails(
-                appointment: appointment,
+                notification: notification,
               ),
             ),
           );
@@ -131,7 +131,7 @@ class ItemNotification extends StatelessWidget {
                   children: <Widget>[
                     CircleAvatar(
                       radius: 25.0,
-                      backgroundImage: NetworkImage(appointment.imagePatient),
+                      backgroundImage: NetworkImage(notification.imagePatient),
                     ),
                     SizedBox(
                       width: 15.0,
@@ -144,7 +144,7 @@ class ItemNotification extends StatelessWidget {
                         Container(
                           width: cwidth,
                           child: Text(
-                            appointment.namePatient,
+                            notification.namePatient,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.start,
@@ -187,7 +187,7 @@ class ItemNotification extends StatelessWidget {
                                 size: 17.0,
                               ),
                               Text(
-                                getHour(appointment.heure),
+                                getHour(notification.heure),
                                 style: TextStyle(
                                   fontSize: 14.0,
                                   fontWeight: FontWeight.bold,
@@ -215,7 +215,7 @@ class ItemNotification extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     tagLabel(
-                      appointment.etat,
+                      notification.etat,
                     ),
                   ],
                 )

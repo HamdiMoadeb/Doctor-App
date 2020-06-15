@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:doctor_app/models/appointment.dart';
+import 'package:doctor_app/models/notification.dart';
 import 'package:http/http.dart' as http;
 import 'package:doctor_app/api_calls/urls.dart';
 
-class ApiAppointment {
+class ApiNotification {
   static Future<List<Appointment>> getAllAppointmentsByDay(body) async {
     List<Appointment> listAppointments = [];
     final response = await http.post('${URLS.BASE_URL}/appointment/ByDay',
@@ -17,19 +18,18 @@ class ApiAppointment {
     return listAppointments;
   }
 
-  static Future<List<Appointment>> getAllNewAppointmentsByPatient(id) async {
-    List<Appointment> listAppointments = [];
-    final response = await http.get(
-        '${URLS.BASE_URL}/appointment/patient/' + id,
+  static Future<List<NotificationR>> getAllNotification() async {
+    List<NotificationR> listNotification = [];
+    final response = await http.get('${URLS.BASE_URL}/request',
         headers: {"Content-type": "application/json"});
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
 
-      for (Map i in data['newApp']) {
-        listAppointments.add(Appointment.fromJson(i));
+      for (Map i in data['docs']) {
+        listNotification.add(NotificationR.fromJson(i));
       }
     }
-    return listAppointments;
+    return listNotification;
   }
 
   static Future<List<Appointment>> getAllOldAppointmentsByPatient(id) async {

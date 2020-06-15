@@ -1,5 +1,6 @@
 import 'package:doctor_app/api_calls/api_appointment.dart';
 import 'package:doctor_app/api_calls/api_patient.dart';
+import 'package:doctor_app/models/notification.dart';
 import 'package:doctor_app/screens/reschedule_appointment_page.dart';
 import 'package:flutter/material.dart';
 import 'package:doctor_app/models/appointment.dart';
@@ -8,23 +9,23 @@ import 'package:intl/intl.dart';
 
 class NotificationDetails extends StatefulWidget {
   NotificationDetails({
-    @required this.appointment,
+    @required this.notification,
   });
 
-  final Appointment appointment;
+  final NotificationR notification;
 
   @override
   NotificationDetailsState createState() =>
-      new NotificationDetailsState(appointment: appointment);
+      new NotificationDetailsState(notification: notification);
 }
 
 class NotificationDetailsState extends State<NotificationDetails> {
   NotificationDetailsState({
-    @required this.appointment,
+    @required this.notification,
   });
 
   var descController = TextEditingController();
-  Appointment appointment;
+  NotificationR notification;
 
   String getHour(int index) {
     switch (index) {
@@ -155,7 +156,7 @@ class NotificationDetailsState extends State<NotificationDetails> {
               new FlatButton(
                   child: const Text('YES'),
                   onPressed: () {
-                    ApiAppointment.cancelAppointment(appointment.id)
+                    ApiAppointment.cancelAppointment(notification.id)
                         .then((onValue) {
                       Navigator.pop(context);
                       setState(() {
@@ -187,7 +188,7 @@ class NotificationDetailsState extends State<NotificationDetails> {
               new FlatButton(
                   child: const Text('YES'),
                   onPressed: () {
-                    ApiAppointment.validateAppointment(appointment.id)
+                    ApiAppointment.validateAppointment(notification.id)
                         .then((onValue) {
                       Navigator.pop(context);
                       setState(() {
@@ -215,7 +216,7 @@ class NotificationDetailsState extends State<NotificationDetails> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    etat = appointment.etat;
+    etat = notification.etat;
     if (etat == 1) {
       visiblityReschdule = true;
       visiblityFinish = true;
@@ -232,7 +233,7 @@ class NotificationDetailsState extends State<NotificationDetails> {
       visiblityNewDate = false;
     }
 
-    ApiPatient.getPatientById(appointment.idPatient).then((onValue) {
+    ApiPatient.getPatientById(notification.createdBy).then((onValue) {
       setState(() {
         email = onValue.email;
         phone = onValue.phone;
@@ -242,7 +243,7 @@ class NotificationDetailsState extends State<NotificationDetails> {
 
   @override
   Widget build(BuildContext context) {
-    DateTime dateTime = DateTime.parse(appointment.date);
+    DateTime dateTime = DateTime.parse(notification.date);
     String dateRDV = new DateFormat.yMd('fr_FR').format(dateTime).toString();
     double cwidth = MediaQuery.of(context).size.width * 0.8;
 
@@ -260,7 +261,7 @@ class NotificationDetailsState extends State<NotificationDetails> {
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[tagLabel(appointment.etat)],
+              children: <Widget>[tagLabel(notification.etat)],
             ),
             SizedBox(
               height: 10.0,
@@ -276,7 +277,7 @@ class NotificationDetailsState extends State<NotificationDetails> {
                   backgroundColor: Colors.blue,
                   child: CircleAvatar(
                     radius: 36.0,
-                    backgroundImage: NetworkImage(appointment.imagePatient),
+                    backgroundImage: NetworkImage(notification.imagePatient),
                   ),
                 ),
                 SizedBox(
@@ -290,7 +291,7 @@ class NotificationDetailsState extends State<NotificationDetails> {
                     Container(
                       width: 250.0,
                       child: Text(
-                        appointment.namePatient,
+                        notification.namePatient,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
@@ -425,7 +426,7 @@ class NotificationDetailsState extends State<NotificationDetails> {
                     Container(
                       width: cwidth,
                       child: Text(
-                        appointment.description,
+                        notification.description,
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           // backgroundColor: Color(0x29ED34E3),
@@ -504,7 +505,7 @@ class NotificationDetailsState extends State<NotificationDetails> {
                           size: 23.0,
                         ),
                         Text(
-                          getHour(appointment.heure),
+                          getHour(notification.heure),
                           style: TextStyle(
                             fontSize: 21.0,
                             fontWeight: FontWeight.bold,
@@ -593,16 +594,7 @@ class NotificationDetailsState extends State<NotificationDetails> {
                   visible: false,
                   child: RaisedButton(
                     color: Colors.yellow.shade700,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RescheduleAppointment(
-                            appointment: appointment,
-                          ),
-                        ),
-                      );
-                    },
+                    onPressed: () {},
                     child: const Text(
                       'Reschdule',
                       style: TextStyle(fontSize: 20, color: Colors.white),

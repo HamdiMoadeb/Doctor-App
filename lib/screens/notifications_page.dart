@@ -1,6 +1,6 @@
-import 'package:doctor_app/api_calls/api_appointment.dart';
+import 'package:doctor_app/api_calls/api_notification.dart';
 import 'package:doctor_app/components/item_notification.dart';
-import 'package:doctor_app/models/appointment.dart';
+import 'package:doctor_app/models/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,7 +10,7 @@ class NotificationsList extends StatefulWidget {
 }
 
 class NotificationsListState extends State<NotificationsList> {
-  List<Appointment> assistants = List<Appointment>();
+  List<NotificationR> notifications = List<NotificationR>();
 
   String idDoc = '';
   DateTime selectedDate = DateTime.now();
@@ -43,11 +43,9 @@ class NotificationsListState extends State<NotificationsList> {
         title: Text('Notifications'),
       ),
       body: FutureBuilder(
-        future: ApiAppointment.getAllAppointmentsByDay({
-          "date": selectedDate.toString(),
-        }),
+        future: ApiNotification.getAllNotification(),
         builder: (context, snapshot) {
-          assistants = snapshot.data;
+          notifications = snapshot.data;
           if (snapshot.connectionState == ConnectionState.done) {
             return ListView.builder(
               padding: EdgeInsets.all(10.0),
@@ -55,9 +53,9 @@ class NotificationsListState extends State<NotificationsList> {
                   ItemNotification(
                 context: context,
                 index: index,
-                listdvs: assistants,
+                listdvs: notifications,
               ),
-              itemCount: assistants.length,
+              itemCount: notifications.length,
             );
           }
           return Center(
