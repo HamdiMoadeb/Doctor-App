@@ -28,17 +28,16 @@ class ApiAuth {
     }
   }
 
-  static Future<String> uploadPhoto(formdata) async {
+  static Future<String> uploadPhoto(formdata, id) async {
     Dio dio = new Dio();
-    dio
-        .post('${URLS.BASE_URL}',
+    dio.patch('${URLS.BASE_URL}/doc/updateInfo/' + id,
             data: formdata,
-            options: Options(method: 'POST', responseType: ResponseType.json))
+            options: Options(method: 'PATCH', responseType: ResponseType.json))
         .then((response) {
-      print(response);
+      print('&&&&&&&&&&&&&&&&&&&&&&$response');
       return response;
     }).catchError((error) {
-      print(error);
+      print('&&&&&&&&&&&&&&&&&&&&&&$error');
       return error;
     });
   }

@@ -72,21 +72,13 @@ class ItemNotification extends StatelessWidget {
     Color textColor;
     Color bgColor;
     if (tagId == 1) {
-      label = 'ACTIVE';
-      textColor = Colors.green;
-      bgColor = Colors.green.shade100;
-    } else if (tagId == 2) {
       label = 'REQUEST RESCHEDULE';
       textColor = Colors.orange;
       bgColor = Colors.yellow.shade500;
-    } else if (tagId == 3) {
+    } else if (tagId == 0) {
       label = 'APPOINTMENT CANCELLED';
       textColor = Colors.red;
       bgColor = Colors.red.shade100;
-    } else if (tagId == 4) {
-      label = 'DONE';
-      textColor = Colors.grey.shade700;
-      bgColor = Colors.grey.shade400;
     }
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 1.0),
@@ -106,7 +98,7 @@ class ItemNotification extends StatelessWidget {
   Widget build(BuildContext context) {
     double cwidth = MediaQuery.of(context).size.width * 0.6;
     NotificationR notification = listdvs[index];
-    DateTime dateTime = DateTime.parse(notification.date);
+    DateTime dateTime = DateTime.parse(notification.olddate);
     String dateRDV = new DateFormat.yMd('fr_FR').format(dateTime).toString();
     print(dateRDV);
     return Container(
@@ -144,7 +136,7 @@ class ItemNotification extends StatelessWidget {
                         Container(
                           width: cwidth,
                           child: Text(
-                            notification.namePatient,
+                            notification.fullnamePatient,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.start,
@@ -187,7 +179,7 @@ class ItemNotification extends StatelessWidget {
                                 size: 17.0,
                               ),
                               Text(
-                                getHour(notification.heure),
+                                getHour(notification.oldheure),
                                 style: TextStyle(
                                   fontSize: 14.0,
                                   fontWeight: FontWeight.bold,

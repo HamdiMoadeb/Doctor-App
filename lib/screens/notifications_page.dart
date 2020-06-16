@@ -4,20 +4,40 @@ import 'package:doctor_app/models/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+final RouteObserver<PageRoute> routeObserver = new RouteObserver<PageRoute>();
 class NotificationsList extends StatefulWidget {
   @override
   NotificationsListState createState() => new NotificationsListState();
 }
 
-class NotificationsListState extends State<NotificationsList> {
+class NotificationsListState extends State<NotificationsList> with RouteAware {
   List<NotificationR> notifications = List<NotificationR>();
 
   String idDoc = '';
   DateTime selectedDate = DateTime.now();
 
-  callback() {
+  void callback() {
     setState(() {});
   }
+
+  @override
+  void didPopNext() {
+    callback();
+    print('calllllbackkkkkk');
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
 
   @override
   void initState() {
@@ -45,7 +65,7 @@ class NotificationsListState extends State<NotificationsList> {
       body: FutureBuilder(
         future: ApiNotification.getAllNotification(),
         builder: (context, snapshot) {
-          notifications = snapshot.data;
+          notifications = snapshot.data as List<NotificationR>;
           if (snapshot.connectionState == ConnectionState.done) {
             return ListView.builder(
               padding: EdgeInsets.all(10.0),

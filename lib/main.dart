@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'screens/login_page.dart';
 
+final RouteObserver<PageRoute> routeObserver = new RouteObserver<PageRoute>();
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -14,6 +15,7 @@ class MyApp extends StatelessWidget {
     ]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      navigatorObservers: [routeObserver],
       title: 'Doctor App',
       theme: ThemeData(
         primarySwatch: Colors.blue,

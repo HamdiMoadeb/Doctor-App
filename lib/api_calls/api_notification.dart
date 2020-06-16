@@ -25,31 +25,28 @@ class ApiNotification {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
 
-      for (Map i in data['docs']) {
+      for (Map i in data['requests']) {
         listNotification.add(NotificationR.fromJson(i));
       }
     }
     return listNotification;
   }
 
-  static Future<List<Appointment>> getAllOldAppointmentsByPatient(id) async {
-    List<Appointment> listAppointments = [];
-    final response = await http.get(
-        '${URLS.BASE_URL}/appointment/patient/' + id,
+  static Future<String> getNbNotification() async {
+    String nb = '0';
+    final response = await http.get('${URLS.BASE_URL}/request',
         headers: {"Content-type": "application/json"});
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-
-      for (Map i in data['oldApp']) {
-        listAppointments.add(Appointment.fromJson(i));
-      }
+      nb = data['count'].toString();
+      print(data['count'].toString());
     }
-    return listAppointments;
+    return nb;
   }
 
-  static Future<String> cancelAppointment(id) async {
+  static Future<String> cancelNotification(id) async {
     final body = {};
-    final response = await http.put('${URLS.BASE_URL}/appointment/' + id,
+    final response = await http.patch('${URLS.BASE_URL}/request/refuse/' + id,
         body: jsonEncode(body), headers: {"Content-type": "application/json"});
     if (response.statusCode == 404) {
       print(response.body);
@@ -60,9 +57,9 @@ class ApiNotification {
     }
   }
 
-  static Future<String> validateAppointment(id) async {
+  static Future<String> validateNotification(id) async {
     final body = {};
-    final response = await http.put('${URLS.BASE_URL}/appointment/done/' + id,
+    final response = await http.patch('${URLS.BASE_URL}/request/accept/' + id,
         body: jsonEncode(body), headers: {"Content-type": "application/json"});
     if (response.statusCode == 404) {
       print(response.body);
@@ -73,17 +70,7 @@ class ApiNotification {
     }
   }
 
-  static Future<int> reportAppointment(body) async {
-    final response = await http.patch('${URLS.BASE_URL}/appointment/report',
-        body: jsonEncode(body), headers: {"Content-type": "application/json"});
-    if (response.statusCode == 404) {
-      print(response.body);
-      return response.statusCode;
-    } else if (response.statusCode == 200) {
-      print(response.body);
-      return response.statusCode;
-    }
-  }
+
 
   static Future<String> addAppointment(body) async {
     final response = await http.post('${URLS.BASE_URL}/appointment/add',

@@ -113,14 +113,7 @@ class ItemWallet extends StatelessWidget {
     return Container(
       child: InkWell(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NotificationDetails(
-                appointment: appointment,
-              ),
-            ),
-          );
+
         },
         child: Card(
           child: Padding(

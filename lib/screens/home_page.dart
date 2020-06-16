@@ -10,6 +10,7 @@ import 'add_appointment_page.dart';
 import 'add_patient_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'doctor_details_page.dart';
+import 'package:doctor_app/api_calls/api_notification.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -51,6 +52,20 @@ class _MyHomePageState extends State<HomePage> {
         selectedDate = picked;
         print(selectedDate);
       });
+  }
+
+  String nbNotif = '0';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    ApiNotification.getNbNotification().then((onValue) {
+      setState(() {
+        nbNotif = onValue;
+      });
+    });
   }
 
   @override
@@ -123,7 +138,7 @@ class _MyHomePageState extends State<HomePage> {
                             shape: BoxShape.circle, color: Colors.red),
                         alignment: Alignment.center,
                         child: Text(
-                          '22',
+                          nbNotif,
                           style: TextStyle(
                             fontSize: 12.0,
                           ),

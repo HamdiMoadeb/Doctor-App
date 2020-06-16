@@ -1,4 +1,5 @@
 import 'package:doctor_app/api_calls/api_appointment.dart';
+import 'package:doctor_app/api_calls/api_notification.dart';
 import 'package:doctor_app/api_calls/api_patient.dart';
 import 'package:doctor_app/models/notification.dart';
 import 'package:doctor_app/screens/reschedule_appointment_page.dart';
@@ -85,22 +86,15 @@ class NotificationDetailsState extends State<NotificationDetails> {
     Color textColor;
     Color bgColor;
     if (tagId == 1) {
-      label = 'ACTIVE';
-      textColor = Colors.green;
-      bgColor = Colors.green.shade100;
-    } else if (tagId == 2) {
       label = 'REQUEST RESCHEDULE';
       textColor = Colors.orange;
       bgColor = Colors.yellow.shade500;
-    } else if (tagId == 3) {
+    } else if (tagId == 0) {
       label = 'APPOINTMENT CANCELLED';
       textColor = Colors.red;
       bgColor = Colors.red.shade100;
-    } else if (tagId == 4) {
-      label = 'DONE';
-      textColor = Colors.grey.shade700;
-      bgColor = Colors.grey.shade400;
     }
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 1.0),
       color: bgColor,
@@ -140,7 +134,7 @@ class NotificationDetailsState extends State<NotificationDetails> {
     }
   }
 
-  _displayDialogCancel(BuildContext context) async {
+   _displayDialogCancel(BuildContext context) async {
     return showDialog(
         context: context,
         builder: (context) {
@@ -156,15 +150,10 @@ class NotificationDetailsState extends State<NotificationDetails> {
               new FlatButton(
                   child: const Text('YES'),
                   onPressed: () {
-                    ApiAppointment.cancelAppointment(notification.id)
+                    ApiNotification.cancelNotification(notification.id)
                         .then((onValue) {
-                      Navigator.pop(context);
-                      setState(() {
-                        etat = 3;
-                        visiblityReschdule = false;
-                        visiblityFinish = false;
-                        visiblityCancel = false;
-                      });
+                      int count = 0;
+                      Navigator.of(context).popUntil((_) => count++ >= 2);
                     });
                   })
             ],
@@ -188,15 +177,10 @@ class NotificationDetailsState extends State<NotificationDetails> {
               new FlatButton(
                   child: const Text('YES'),
                   onPressed: () {
-                    ApiAppointment.validateAppointment(notification.id)
+                    ApiNotification.validateNotification(notification.id)
                         .then((onValue) {
-                      Navigator.pop(context);
-                      setState(() {
-                        etat = 4;
-                        visiblityReschdule = false;
-                        visiblityFinish = false;
-                        visiblityCancel = false;
-                      });
+                      int count = 0;
+                      Navigator.of(context).popUntil((_) => count++ >= 2);
                     });
                   })
             ],
@@ -211,28 +195,29 @@ class NotificationDetailsState extends State<NotificationDetails> {
   bool visiblityFinish;
   bool visiblityCancel;
   bool visiblityNewDate;
+  bool visiblityOldDate;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     etat = notification.etat;
-    if (etat == 1) {
-      visiblityReschdule = true;
-      visiblityFinish = true;
-      visiblityCancel = true;
-    } else if (etat == 2) {
-      visiblityReschdule = true;
-      visiblityFinish = true;
-      visiblityCancel = true;
-      visiblityNewDate = true;
-    } else {
+    if (etat == 0) {
       visiblityReschdule = false;
       visiblityFinish = false;
       visiblityCancel = false;
       visiblityNewDate = false;
-    }
+      visiblityOldDate = true;
 
+      ApiNotification.cancelNotification(notification.id);
+
+    } else if (etat == 1) {
+      visiblityReschdule = false;
+      visiblityFinish = true;
+      visiblityCancel = true;
+      visiblityNewDate = true;
+      visiblityOldDate = false;
+    }
     ApiPatient.getPatientById(notification.createdBy).then((onValue) {
       setState(() {
         email = onValue.email;
@@ -243,8 +228,10 @@ class NotificationDetailsState extends State<NotificationDetails> {
 
   @override
   Widget build(BuildContext context) {
-    DateTime dateTime = DateTime.parse(notification.date);
-    String dateRDV = new DateFormat.yMd('fr_FR').format(dateTime).toString();
+    DateTime oldDateTime = DateTime.parse(notification.olddate);
+    DateTime newDateTime = DateTime.parse(notification.newdate);
+    String OLDdate = new DateFormat.yMd('fr_FR').format(oldDateTime).toString();
+    String NEWdate = new DateFormat.yMd('fr_FR').format(newDateTime).toString();
     double cwidth = MediaQuery.of(context).size.width * 0.8;
 
     return Scaffold(
@@ -291,7 +278,7 @@ class NotificationDetailsState extends State<NotificationDetails> {
                     Container(
                       width: 250.0,
                       child: Text(
-                        notification.namePatient,
+                        notification.fullnamePatient,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
@@ -459,61 +446,69 @@ class NotificationDetailsState extends State<NotificationDetails> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Container(
-                      width: 250.0,
-                      child: Text(
-                        'Date and Time',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          // backgroundColor: Color(0x29ED34E3),
-                          fontSize: 15.0,
-                          color: Colors.grey.shade500,
+                    Visibility(
+                      visible: true,
+                      child:  Container(
+                        width: 250.0,
+                        child: Text(
+                          'Date and Time',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            // backgroundColor: Color(0x29ED34E3),
+                            fontSize: 15.0,
+                            color: Colors.grey.shade500,
+                          ),
                         ),
                       ),
                     ),
+
                     SizedBox(
                       height: 3.0,
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.today,
-                          color: Colors.black,
-                          size: 23.0,
-                        ),
-                        SizedBox(
-                          width: 2.0,
-                        ),
-                        Text(
-                          dateRDV,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 21.0,
+                    Visibility(
+                      visible: true,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.today,
                             color: Colors.black,
-                            fontWeight: FontWeight.bold,
+                            size: 23.0,
                           ),
-                        ),
-                        SizedBox(
-                          width: 7.0,
-                        ),
-                        Icon(
-                          Icons.access_time,
-                          color: Colors.black,
-                          size: 23.0,
-                        ),
-                        Text(
-                          getHour(notification.heure),
-                          style: TextStyle(
-                            fontSize: 21.0,
-                            fontWeight: FontWeight.bold,
+                          SizedBox(
+                            width: 2.0,
+                          ),
+                          Text(
+                            OLDdate,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: 21.0,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 7.0,
+                          ),
+                          Icon(
+                            Icons.access_time,
                             color: Colors.black,
+                            size: 23.0,
                           ),
-                        ),
-                      ],
-                    ),
+                          Text(
+                            getHour(notification.oldheure),
+                            style: TextStyle(
+                              fontSize: 21.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                    ,
                     SizedBox(
                       height: 3.0,
                     ),
@@ -544,14 +539,14 @@ class NotificationDetailsState extends State<NotificationDetails> {
                         children: <Widget>[
                           Icon(
                             Icons.today,
-                            color: Colors.yellow.shade700,
+                            color: Colors.black,
                             size: 23.0,
                           ),
                           SizedBox(
                             width: 2.0,
                           ),
                           Text(
-                            dateRDV,
+                            NEWdate,
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: 21.0,
@@ -568,7 +563,7 @@ class NotificationDetailsState extends State<NotificationDetails> {
                             size: 23.0,
                           ),
                           Text(
-                            getHour(20),
+                            getHour(notification.newheure),
                             style: TextStyle(
                               fontSize: 21.0,
                               fontWeight: FontWeight.bold,
@@ -607,7 +602,7 @@ class NotificationDetailsState extends State<NotificationDetails> {
                     color: Colors.green,
                     onPressed: () => _displayDialogValidate(context),
                     child: const Text(
-                      'Validate',
+                      'Accept',
                       style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
                   ),

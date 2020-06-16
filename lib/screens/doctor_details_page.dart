@@ -5,6 +5,8 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
+import 'package:doctor_app/api_calls/urls.dart';
+import 'package:http_parser/http_parser.dart';
 
 class DoctorDetails extends StatefulWidget {
   @override
@@ -76,13 +78,16 @@ class DoctorDetailsState extends State<DoctorDetails> {
       imageQuality: 50,
     );
 
-    FormData formdata = new FormData.fromMap({
-      "file": await MultipartFile.fromFile(pickedFile.path,
-          filename: '$docName.jpg')
+    String filename = pickedFile.path.split('/').last;
+    String ext = pickedFile.path.split('.').last;
+    final FormData formdata = FormData.fromMap({
+      'image': await MultipartFile.fromFile(pickedFile.path, filename: filename, contentType: MediaType('image', '$ext')),
+      'type':'image/$ext'
     });
-    //ApiAuth.uploadPhoto(formdata);
-    //SharedPreferences prefs = await SharedPreferences.getInstance();
-    //prefs.setString('imageDoc', '$docName.jpg');
+    print('//////////////$filename');
+    ApiAuth.uploadPhoto(formdata, docId);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('imageDoc','${URLS.BASE_URL}/$docId.jpg');
     setState(() {
       _image = File(pickedFile.path);
     });
