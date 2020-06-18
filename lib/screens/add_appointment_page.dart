@@ -188,6 +188,9 @@ class _State extends State<AddAppointment> {
     // TODO: implement initState
     super.initState();
     getHoursByDate(selectedDate.toString());
+    if (patient != null) {
+      patientId = patient.id;
+    }
   }
 
   @override
@@ -353,6 +356,7 @@ class _State extends State<AddAppointment> {
                               "date": selectedDate.toString(),
                               "heure": getSelectedChip(),
                             };
+                            print(body);
                             ApiAppointment.addAppointment(body).then((success) {
                               String response =
                                   json.decode(success)['response'].toString();

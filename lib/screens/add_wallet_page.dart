@@ -1,17 +1,21 @@
+import 'package:doctor_app/api_calls/api_wallet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:doctor_app/components/datepicker_input.dart';
 import 'package:doctor_app/components/searchable_dropdown.dart';
 import 'package:intl/intl.dart';
 import 'package:doctor_app/models/patient.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
+import 'dart:convert';
 
 class AddWallet extends StatefulWidget {
   AddWallet({this.patient});
 
   final Patient patient;
   @override
-  AddWalletState createState() => AddWalletState();
+  AddWalletState createState() => AddWalletState(patient: patient);
 }
 
 class AddWalletState extends State<AddWallet> {
@@ -25,6 +29,7 @@ class AddWalletState extends State<AddWallet> {
   DateTime selectedDate = DateTime.now();
   ValueChanged<DateTime> selectDate;
   String patientId = "";
+  String idDoc = "";
 
   callbackPatient(newPat) {
     setState(() {
@@ -32,6 +37,27 @@ class AddWalletState extends State<AddWallet> {
       print('ID CALLBACK @@@@@ $newPat');
       patientId = newPat;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    if (patient != null) {
+      patientId = patient.id;
+    }
+
+    Future<String> getDocId() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString('idDoc');
+      setState(() {
+        idDoc = token;
+      });
+      return token;
+    }
+
+    getDocId();
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -44,7 +70,7 @@ class AddWalletState extends State<AddWallet> {
       setState(() {
         selectedDate = picked;
         birthday = new DateFormat.yMd('fr_FR').format(picked).toString();
-        //callbackBirth(birthday);
+        print(picked);
       });
   }
 
@@ -156,14 +182,32 @@ class AddWalletState extends State<AddWallet> {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () async {
-                                //  String createdby = await getDocId();
-
                                 final body = {
                                   "idPatient": patientId,
-                                  //  "createdBy": createdby,
                                   "description": desc.text.toString(),
+                                  "amount": money.text.toString(),
                                   "date": selectedDate.toString(),
+                                  "createdBy": idDoc,
                                 };
+
+                                ApiWallet.addWallet(body).then((onValue) {
+                                  String response = json
+                                      .decode(onValue)['response']
+                                      .toString();
+                                  if (response == 'true') {
+                                    if (Navigator.canPop(context)) {
+                                      Navigator.pop(context);
+                                    } else {
+                                      SystemNavigator.pop();
+                                    }
+                                  } else {
+                                    String message = json
+                                        .decode(onValue)['message']
+                                        .toString();
+                                    print(message);
+                                  }
+                                  return;
+                                });
                               },
                               child: Center(
                                 child: Text(

@@ -1,5 +1,6 @@
 import 'package:doctor_app/screens/patient_appointments_list_page.dart';
 import 'package:doctor_app/screens/patient_personal_data_page.dart';
+import 'package:doctor_app/screens/wallet_patient_page.dart';
 import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:doctor_app/models/patient.dart';
@@ -276,6 +277,33 @@ class PatientDetailsState extends State<PatientDetails> {
                         ),
                         title: Text(
                           'Personal information',
+                          style: TextStyle(
+                            fontSize: 17.0,
+                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.keyboard_arrow_right,
+                        ),
+                      ),
+                      ListTile(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WalletPatientPage(
+                                patient: patient,
+                              ),
+                            ),
+                          );
+                        },
+                        leading: Icon(
+                          OMIcons.monetizationOn,
+                          //Icons.perm_contact_calendar,
+                          color: Colors.blue,
+                          size: 25.0,
+                        ),
+                        title: Text(
+                          'Paiements',
                           style: TextStyle(
                             fontSize: 17.0,
                           ),

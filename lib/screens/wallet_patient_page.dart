@@ -1,19 +1,26 @@
 import 'package:doctor_app/api_calls/api_wallet.dart';
 import 'package:doctor_app/components/item_wallet.dart';
-import 'package:doctor_app/models/appointment.dart';
 import 'package:doctor_app/models/wallet.dart';
 import 'package:doctor_app/screens/add_wallet_page.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:doctor_app/models/patient.dart';
 
-class WalletPage extends StatefulWidget {
+class WalletPatientPage extends StatefulWidget {
+  WalletPatientPage({@required this.patient});
+
+  final Patient patient;
+
   @override
-  WalletPageState createState() => new WalletPageState();
+  WalletPageState createState() => new WalletPageState(patient: patient);
 }
 
-class WalletPageState extends State<WalletPage> {
-  List<Wallet> wallets = List<Wallet>();
+class WalletPageState extends State<WalletPatientPage> {
+  WalletPageState({@required this.patient});
 
+  final Patient patient;
+
+  List<Wallet> wallets = List<Wallet>();
   String idDoc = '';
   DateTime selectedDate = DateTime.now();
 
@@ -42,14 +49,16 @@ class WalletPageState extends State<WalletPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Wallet'),
+        title: Text('Paiements'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddWallet(),
+              builder: (context) => AddWallet(
+                patient: patient,
+              ),
             ),
           );
         },
@@ -59,7 +68,7 @@ class WalletPageState extends State<WalletPage> {
         ),
       ),
       body: FutureBuilder(
-        future: ApiWallet.getAllWallet(idDoc),
+        future: ApiWallet.getAllWalletByPatient(patient.id),
         builder: (context, snapshot) {
           wallets = snapshot.data;
           if (snapshot.connectionState == ConnectionState.done) {
